@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* Ranzo Hardware storefront tokens, copied from the main site so the page
+   drops in unchanged. Keep these; add new ones below them if you need to. */
+@theme inline {
+  --font-sans: var(--font-inter);
+
+  --color-brand-50: #FDF5F2;
+  --color-brand-100: #FAE8E0;
+  --color-brand-200: #F4CFC1;
+  --color-brand-300: #E8A990;
+  --color-brand-400: #D9805F;
+  --color-brand-500: #C85A3A;
+  --color-brand-600: #B24E32;
+  --color-brand-700: #96402A;
+  --color-brand-800: #7A3523;
+  --color-brand-900: #632C1E;
+
+  --color-accent-50: #F2F6F8;
+  --color-accent-100: #DEE7ED;
+  --color-accent-200: #BACDD8;
+  --color-accent-300: #8AAABC;
+  --color-accent-400: #517990;
+  --color-accent-500: #293E4A;
+  --color-accent-600: #233640;
+  --color-accent-700: #1D2C35;
+  --color-accent-800: #17242B;
+  --color-accent-900: #121C21;
+
+  /* Chrome (header/footer): blue-grey. */
+  --color-steel-600: #29353D;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
