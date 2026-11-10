@@ -9,24 +9,28 @@
 export default function Blank({
   children,
   source,
+  prefix = "To come: ",
   tone = "light",
   className = "",
 }: {
   children: React.ReactNode;
   /** Who or what fills it, e.g. "Daniel, RAN-42". */
   source?: string;
+  /** The lead-in. Pass "" for a note that is a full sentence of its own. */
+  prefix?: string;
   /** "dark" for notes that sit on a navy band. */
   tone?: "light" | "dark";
   className?: string;
 }) {
   const colours =
-    tone === "dark" ? "border-accent-400 text-accent-200" : "border-stone-300 text-stone-500";
+    tone === "dark" ? "border-accent-400 text-accent-200" : "border-stone-300 text-stone-600";
   return (
     <span
       data-blank
       className={`rounded border border-dashed box-decoration-clone px-1.5 py-0.5 text-[0.8125rem] font-normal leading-normal ${colours} ${className}`}
     >
-      To come: {children}
+      {prefix}
+      {children}
       {source ? ` (${source})` : null}
     </span>
   );

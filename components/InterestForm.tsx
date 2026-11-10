@@ -21,6 +21,9 @@ const BUTTON_LABEL = "Get wholesale pricing";
 // any of them optional, so all six are required.
 const FIELD_NAMES = ["company", "contactName", "phone", "email", "shipToZip", "heardFrom"] as const;
 type FieldName = (typeof FIELD_NAMES)[number];
+
+// Provisional: Daniel still has to approve these (RAN-52).
+const HEARD_FROM_OPTIONS = ["Google search", "Referral", "Amazon or Walmart", "Social media", "Other"];
 type Errors = Partial<Record<FieldName, string>>;
 
 /** Returns a short plain message, or undefined when the value is fine. */
@@ -65,6 +68,7 @@ function Field({
     id: string;
     name: FieldName;
     className: string;
+    required: true;
     "aria-invalid": boolean;
     "aria-describedby": string | undefined;
   }) => React.ReactNode;
@@ -80,6 +84,9 @@ function Field({
         id,
         name,
         className: controlClass,
+        // Announced as required by screen readers. The form is noValidate, so
+        // the browser's own messages stay off and ours are the only ones.
+        required: true,
         "aria-invalid": Boolean(error),
         "aria-describedby": error ? errorId : undefined,
       })}
@@ -146,6 +153,10 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
       <dialog
         ref={dialogRef}
         aria-labelledby="interest-form-title"
+        // After a successful send, closing puts the empty form back, so the
+        // next open never starts on the thank-you screen. A half-filled form
+        // that was only closed keeps what was typed.
+        onClose={() => setSent(false)}
         onClick={(event) => {
           // A click on the backdrop lands on the dialog element itself.
           if (event.target === dialogRef.current) close();
@@ -251,15 +262,17 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
                       <option value="" disabled>
                         Select one
                       </option>
-                      {/* BLANK: the dropdown's options are agreed in RAN-39. */}
-                      <option value="blank-1">To come: option 1</option>
-                      <option value="blank-2">To come: option 2</option>
-                      <option value="blank-3">To come: option 3</option>
+                      {/* Provisional options, pending Daniel's approval (RAN-52).
+                          "Select one" is disabled and has no value, so it
+                          can't be sent: validate() asks the buyer to choose. */}
+                      {HEARD_FROM_OPTIONS.map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
                     </select>
                   )}
                 </Field>
                 <p className="text-sm sm:col-span-2">
-                  <Blank source="review, RAN-39">dropdown options</Blank>
+                  <Blank source="RAN-52">Daniel&rsquo;s approval of these</Blank>
                 </p>
               </div>
 

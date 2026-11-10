@@ -5,7 +5,7 @@ import Logo from "./Logo";
 export default function LandingFooter() {
   return (
     <footer className="bg-accent-900 text-accent-200">
-      <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-4 px-4 py-10 text-center text-sm sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-start gap-4 px-4 py-10 text-sm sm:px-6 lg:px-8">
         <Logo variant="reversed" className="h-8 w-auto" />
         <p className="text-accent-200">
           &copy; {new Date().getFullYear()} Ranzo Hardware. Family-owned on Long Island since 2021.
