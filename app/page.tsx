@@ -76,35 +76,40 @@ const STATS = [
 
 /**
  * Brand logos (RAN-49). Provisional: Daniel still has to confirm which logos
- * we are allowed to show. Order is the one Ty set.
+ * we are allowed to show. Order is the one Ty set. Makita is left out until
+ * there is a correct file for it.
  *
- * Each file in public/images/brands is the brand's own, copied in unchanged
- * and shown as supplied: never redrawn, recoloured, cropped or stretched.
- * `mark` is the share of the file's height that the visible logo fills (the
- * rest is the file's own empty margin). The page divides by it so every logo
- * is drawn at the same visual height, whatever margin its file carries.
+ * DeWalt is the brand's own vector file, unchanged. The other three are the
+ * logo on its own background colour, cropped to an even margin and saved at
+ * twice the widest size it is drawn at. Nothing is redrawn, recoloured or
+ * stretched: `width` and `height` are the file's own proportions.
  *
- * A brand with no usable file has no `logo` and shows as a plain text tile.
- * To add one: put the file in public/images/brands and fill in `logo`.
+ * `show` is how wide the logo is drawn, as a share of a tile's inner width.
+ * The shares balance the row by visual weight, not by height: every badge
+ * covers about the same area, so a wide logo (Stanley) comes out shorter and
+ * a compact one (Grip-Rite) taller, and none dominates. To add a brand, put
+ * its file here and pick `show` so that show x show / (width / height)
+ * comes to about 0.22. Grip-Rite sits a little under that, because its
+ * badge is the tallest and has no margin of its own. DeWalt's is higher,
+ * because its file has clear space around the yellow badge (the badge is
+ * 93% of the file's width and 79% of its height); it also keeps its own
+ * square corners, since the rounding only ever trims a file's margin.
  */
-const BRANDS: {
-  name: string;
-  logo?: { src: string; width: number; height: number; mark: number };
-}[] = [
-  { name: "DeWalt", logo: { src: "/images/brands/dewalt.svg", width: 957, height: 343, mark: 0.794 } },
-  { name: "Milwaukee", logo: { src: "/images/brands/milwaukee.png", width: 256, height: 256, mark: 1 } },
-  { name: "Makita", logo: { src: "/images/brands/makita.png", width: 256, height: 256, mark: 1 } },
-  { name: "3M" }, // no logo file supplied
-  { name: "Stanley", logo: { src: "/images/brands/stanley.png", width: 256, height: 256, mark: 1 } },
-  { name: "Grip-Rite", logo: { src: "/images/brands/grip-rite.png", width: 256, height: 256, mark: 0.484 } },
+const BRANDS = [
+  { name: "DeWalt", src: "/images/brands/dewalt-logo.svg", width: 957, height: 343, show: 0.92 },
+  { name: "Milwaukee", src: "/images/brands/milwaukee-logo.png", width: 252, height: 129, show: 0.66 },
+  { name: "Stanley", src: "/images/brands/stanley-logo.png", width: 336, height: 96, show: 0.88 },
+  { name: "Grip-Rite", src: "/images/brands/grip-rite-logo.png", width: 198, height: 139, show: 0.52 },
 ];
 
 /**
- * The shared visual height of the logos: 48px, or less when a tile is too
- * narrow for the widest logo (DeWalt's badge, 3.26 times as wide as it is
- * tall) to keep 20px of clear space on each side. 100cqw is the tile's width.
+ * The inner width of one brand tile, worked out from the width of the grid
+ * (100cqw): two tiles a row with 12px of padding on a phone, two a row with
+ * the cards' padding on a tablet, four a row from a laptop up, 16px gaps.
+ * Capped at 190px, where a logo reaches the full size its file was saved for.
  */
-const LOGO_HEIGHT = "min(3rem, calc((100cqw - 2.5rem) / 3.26))";
+const BRAND_TILE =
+  "[--tile:min(190px,calc((100cqw-1rem)/2-1.5rem-2px))] sm:[--tile:min(190px,calc((100cqw-1rem)/2-3.5rem-2px))] lg:[--tile:min(190px,calc((100cqw-3rem)/4-3.5rem-2px))]";
 
 /** Top wholesale categories (RAN-49), as Ty listed them. */
 const CATEGORIES = [
@@ -264,7 +269,8 @@ export default function WholesalePage() {
         </section>
 
         {/* ── 2. Who buys from us (RAN-48). The brief's three segments, in
-            its order. The brief gives what and why only for the first. ── */}
+            its order. The brief gives what and why only for the first; the
+            other two lines are provisional until Daniel confirms them. ── */}
         <section className={`bg-stone-100 ${band}`}>
           <div className={column}>
             <SectionHeading>Who buys from us</SectionHeading>
@@ -283,12 +289,8 @@ export default function WholesalePage() {
                   Independent stores
                 </h3>
                 <p className="mt-2 text-base leading-relaxed text-gray-700">
-                  Independent hardware, farm and supply stores.
-                </p>
-                <p className="mt-3">
-                  <Blank source="not in the brief, RAN-48">
-                    what they reorder and why they buy from us
-                  </Blank>
+                  Hardware, farm and supply stores that restock their shelves
+                  by the case.
                 </p>
               </article>
               <article className={card}>
@@ -296,52 +298,46 @@ export default function WholesalePage() {
                   Contractors and property managers
                 </h3>
                 <p className="mt-2 text-base leading-relaxed text-gray-700">
-                  Contractors, builders, property managers and facilities teams.
-                </p>
-                <p className="mt-3">
-                  <Blank source="not in the brief, RAN-48">
-                    what they reorder and why they buy from us
-                  </Blank>
+                  Contractors, builders, property managers and facilities teams
+                  that buy tools and supplies in volume.
                 </p>
               </article>
             </div>
+            <p className="mt-6">
+              <Blank prefix="">Provisional wording. Daniel to confirm (RAN-48).</Blank>
+            </p>
           </div>
         </section>
 
         {/* ── 3. Brands and categories (RAN-49). A quiet strip, not a wall:
-            six brands, each on its own plain white tile at one shared visual
-            height, then the categories as pills. One row of six on a wide
-            screen, three by two on a tablet, two by three on a phone. ── */}
+            four brands, each a small rounded badge centred on a white tile
+            built like the cards elsewhere, then the categories as pills.
+
+            One row of four from a laptop up, two by two below that. On a
+            phone the tiles keep the cards' look but with less padding, so
+            the logos have room to be larger. ── */}
         <section className={`bg-white ${band}`}>
           <div className={column}>
             <SectionHeading>Brands and categories</SectionHeading>
             <ul
               aria-label="Brands"
-              className={`${belowHeading} grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-6`}
+              className={`${belowHeading} @container grid grid-cols-2 gap-4 lg:grid-cols-4 ${BRAND_TILE}`}
             >
-              {BRANDS.map(({ name, logo }) => (
-                <li key={name} className="@container">
-                  <div
-                    style={{ "--logo-h": LOGO_HEIGHT } as React.CSSProperties}
-                    className="flex h-28 items-center justify-center rounded-xl border border-stone-200 bg-white"
-                  >
-                    {logo ? (
-                      // unoptimized: the file is served exactly as supplied.
-                      <Image
-                        src={logo.src}
-                        alt={name}
-                        width={logo.width}
-                        height={logo.height}
-                        unoptimized
-                        style={{ height: `calc(var(--logo-h) / ${logo.mark})`, width: "auto" }}
-                        className="max-w-none"
-                      />
-                    ) : (
-                      <span className="text-2xl font-bold tracking-tight text-accent-500">
-                        {name}
-                      </span>
-                    )}
-                  </div>
+              {BRANDS.map(({ name, src, width, height, show }) => (
+                <li
+                  key={name}
+                  className="flex h-28 items-center justify-center rounded-xl border border-stone-200 bg-white p-3 sm:h-36 sm:p-7"
+                >
+                  {/* unoptimized: the file is served exactly as saved. */}
+                  <Image
+                    src={src}
+                    alt={name}
+                    width={width}
+                    height={height}
+                    unoptimized
+                    style={{ width: `calc(var(--tile) * ${show})` }}
+                    className="h-auto max-w-none rounded-md"
+                  />
                 </li>
               ))}
             </ul>
