@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 
 import { Inter } from "next/font/google";
 
-import SiteFooter from "@/components/SiteFooter";
-import SiteHeader from "@/components/SiteHeader";
-
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -15,13 +12,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// The stand-in storefront chrome (components/SiteHeader.tsx, SiteFooter.tsx)
+// is deliberately not rendered: the brief says this page carries no storefront
+// navigation, only the logo, the one button and a legal footer. The page
+// brings its own slim top bar and footer (LandingHeader, LandingFooter).
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col overflow-x-clip bg-white text-gray-900">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        {children}
       </body>
     </html>
   );
