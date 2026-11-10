@@ -1,0 +1,15 @@
+# Vercel blocks builds for commits whose author is not a team member, so every
+# push to main pings a deploy hook instead; the hook builds the branch head as
+# the team. The hook URL lives in the VERCEL_DEPLOY_HOOK repository secret.
+name: Deploy to Vercel
+on:
+  push:
+    branches: [main]
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        run: curl -fsS -X POST "$HOOK" > /dev/null
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
