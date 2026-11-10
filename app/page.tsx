@@ -44,8 +44,8 @@ const HERO_BUTTON_ID = "hero-cta";
 const HERO_PHOTO = null as { src: string; alt: string } | null;
 
 /**
- * The headline: a navy lead phrase and an orange phrase that always starts
- * its own line. Lead candidate from the brief; Daniel picks the final one in
+ * The headline: two white phrases, the second always starting its own line
+ * (white, so the button is the only orange on the first screen). Lead candidate from the brief; Daniel picks the final one in
  * RAN-44. Change the words here and the sizing below adapts, so a longer
  * headline still sets as two tidy lines on a laptop.
  */
@@ -143,18 +143,20 @@ export default function WholesalePage() {
       <LandingHeader heroButtonId={HERO_BUTTON_ID} />
 
       <main className="flex-1">
-        {/* ── Hero (RAN-44, RAN-45, RAN-46). A full-width light band that owns
+        {/* ── Hero (RAN-44, RAN-45, RAN-46). A full-width navy band that runs
+            on from the top bar, so the two read as one dark block, and owns
             the first screen: headline, four facts, the button, the
             disqualifier. Nothing to click but the button. ── */}
         <section
-          className={`relative flex flex-col justify-center overflow-hidden bg-stone-100 px-4 py-8 text-center sm:px-6 sm:py-12 lg:px-8 ${
+          className={`relative flex flex-col justify-center overflow-hidden bg-accent-500 px-4 py-8 text-center sm:px-6 sm:py-12 lg:px-8 ${
             HERO_PHOTO ? "" : "lg:min-h-[min(calc(100svh-3.5rem),56rem)]"
           }`}
         >
           {/* Two large, quiet shapes: the hex nut from the logo, mirrored,
-              one at each edge and partly off-screen, framing the headline. */}
-          <HexNut className="pointer-events-none absolute -left-32 -top-8 h-64 -scale-x-100 text-stone-200 opacity-70 sm:-left-40 sm:h-96 lg:-left-[26%] lg:top-1/2 lg:h-[112%] lg:-translate-y-1/2" />
-          <HexNut className="pointer-events-none absolute -right-32 -top-8 h-64 text-stone-200 opacity-70 sm:-right-40 sm:h-96 lg:-right-[26%] lg:top-1/2 lg:h-[112%] lg:-translate-y-1/2" />
+              one at each edge and partly off-screen, framing the headline.
+              One step darker than the band, so they stay in the background. */}
+          <HexNut className="pointer-events-none absolute -left-32 -top-8 h-64 -scale-x-100 text-accent-600 sm:-left-40 sm:h-96 lg:-left-[26%] lg:top-1/2 lg:h-[112%] lg:-translate-y-1/2" />
+          <HexNut className="pointer-events-none absolute -right-32 -top-8 h-64 text-accent-600 sm:-right-40 sm:h-96 lg:-right-[26%] lg:top-1/2 lg:h-[112%] lg:-translate-y-1/2" />
 
           <div className="relative">
             {/* Sized to sit well inside the screen, not to fill it: about 92px
@@ -163,25 +165,25 @@ export default function WholesalePage() {
                 (--headline-fit). On phones it may wrap within a phrase. */}
             <h1
               style={{ "--headline-fit": `calc((100vw - 4rem) / ${HEADLINE_EMS.toFixed(2)})` } as React.CSSProperties}
-              className={`text-balance font-black leading-[0.98] tracking-[-0.035em] text-accent-500 ${
+              className={`text-balance font-black leading-[0.98] tracking-[-0.035em] text-white ${
                 HERO_PHOTO
                   ? "text-[length:max(1.75rem,min(calc(var(--headline-fit)_*_1.05),10svh))] lg:text-[length:min(5.6vw,10svh,6rem,var(--headline-fit))]"
                   : "text-[length:max(1.75rem,min(calc(var(--headline-fit)_*_1.05),12svh))] lg:text-[length:min(6.75vw,12svh,7.2rem,var(--headline-fit))]"
               }`}
             >
               <span className="block">{HEADLINE.lead}</span>
-              <span className="block text-brand-500">{HEADLINE.accent}</span>
+              <span className="block">{HEADLINE.accent}</span>
             </h1>
 
             {/* The four answers as a row of four short facts; stacked in the
                 same order on a phone. */}
-            <ul className="mx-auto mt-7 grid max-w-[1440px] gap-3.5 sm:mt-10 lg:mt-[min(3.5rem,6.5svh)] lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-stone-300">
+            <ul className="mx-auto mt-7 grid max-w-[1440px] gap-3.5 sm:mt-10 lg:mt-[min(3.5rem,6.5svh)] lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-accent-400/60">
               {FOUR_FACTS.map(({ fact, label }) => (
                 <li key={fact} className="lg:px-4">
-                  <strong className="block text-lg font-extrabold leading-tight tracking-tight text-accent-500 lg:text-[length:clamp(1.0625rem,1.75vw,1.625rem)]">
+                  <strong className="block text-lg font-extrabold leading-tight tracking-tight text-white lg:text-[length:clamp(1.0625rem,1.75vw,1.625rem)]">
                     {fact}
                   </strong>
-                  <span className="mx-auto mt-0.5 block max-w-[22rem] text-[0.9375rem] leading-snug text-gray-700 lg:mt-1.5 lg:max-w-[19rem] lg:text-base lg:leading-snug">
+                  <span className="mx-auto mt-0.5 block max-w-[22rem] text-[0.9375rem] leading-snug text-accent-200 lg:mt-1.5 lg:max-w-[19rem] lg:text-base lg:leading-snug">
                     {label}
                   </span>
                 </li>
@@ -189,9 +191,14 @@ export default function WholesalePage() {
             </ul>
 
             <div className="mt-7 sm:mt-10 lg:mt-[min(3.5rem,6.5svh)]">
-              <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
-              <Disqualifier />
-              <p className="mt-3 text-sm text-stone-500 lg:mt-4">
+              {/* Same button; only its keyboard focus ring turns white, since
+                  the default navy ring would vanish on this band. */}
+              <PricingButton
+                id={HERO_BUTTON_ID}
+                className="w-full focus-visible:outline-white! sm:w-auto"
+              />
+              <Disqualifier tone="dark" />
+              <p className="mt-3 text-sm text-accent-300 lg:mt-4">
                 Family-owned on Long Island since 2021.
               </p>
             </div>
@@ -375,12 +382,15 @@ export default function WholesalePage() {
           </div>
         </section>
 
-        {/* ── 6. The button again, on a navy band ── */}
+        {/* ── 6. The button again, on a navy band that echoes the hero. The
+            footer below is the much darker accent-900, so the two separate
+            without a rule. ── */}
         <section className={`bg-accent-500 text-center ${band}`}>
           <div className={column}>
             <SectionHeading tone="dark">Six fields and we call you.</SectionHeading>
             <div className={belowHeading}>
-              <PricingButton className="w-full sm:w-auto" />
+              {/* White focus ring, as in the hero: navy would vanish here. */}
+              <PricingButton className="w-full focus-visible:outline-white! sm:w-auto" />
               <Disqualifier tone="dark" />
             </div>
           </div>
