@@ -23,7 +23,7 @@ import LandingHeader from "@/components/LandingHeader";
 export const metadata: Metadata = {
   title: "Wholesale",
   description:
-    "Brand-name tools and hardware by the case or pallet. For business buyers with a resale certificate.",
+    "Wholesale tools and hardware by the case or pallet. DeWalt, Milwaukee and more. For business buyers with a resale certificate.",
 };
 
 const HERO_BUTTON_ID = "hero-cta";
@@ -45,11 +45,12 @@ const HERO_PHOTO = null as { src: string; alt: string } | null;
 
 /**
  * The headline: two white phrases, the second always starting its own line
- * (white, so the button is the only orange on the first screen). Lead candidate from the brief; Daniel picks the final one in
- * RAN-44. Change the words here and the sizing below adapts, so a longer
- * headline still sets as two tidy lines on a laptop.
+ * (white, so the button is the only orange on the first screen). Daniel has
+ * decided this is one general landing page, so the headline names no single
+ * brand (RAN-44). Change the words here and the sizing below adapts, so a
+ * longer headline still sets as two tidy lines on a laptop.
  */
-const HEADLINE = { lead: "DeWalt by the pallet,", accent: "at wholesale prices." };
+const HEADLINE = { lead: "Wholesale tools and hardware,", accent: "by the case or pallet." };
 
 /**
  * Roughly how wide the longer phrase is, in ems of the headline type. 0.54em
@@ -64,10 +65,10 @@ const HEADLINE_EMS = Math.max(HEADLINE.lead.length, HEADLINE.accent.length) * 0.
  * key fact in bold, the rest of the answer as its label.
  */
 const FOUR_FACTS = [
-  // What you get
-  { fact: "By the case or pallet", label: "Brand-name tools and hardware." },
+  // What you get (the headline says by the case or pallet; this says whose)
+  { fact: "DeWalt, Milwaukee and more", label: "2,900+ brands in all." },
   // Can we deliver
-  { fact: "60,000+ products", label: "2,900+ brands, 15 distribution centers in 14 states." },
+  { fact: "60,000+ products", label: "15 distribution centers in 14 states." },
   // How long
   {
     fact: "Within the hour",
@@ -161,10 +162,13 @@ export default function WholesalePage() {
           <div className="relative">
             {/* Sized to sit well inside the screen, not to fill it: about 92px
                 on a 1366 laptop and 115px at 1920, less on short screens, and
-                never wider than the screen allows for the longer phrase
-                (--headline-fit). On phones it may wrap within a phrase. */}
+                never wider than the screen, or the 1440px page column on
+                wider screens, allows for the longer phrase (--headline-fit),
+                so a long headline lines up with the logo and the facts
+                instead of running past them. On phones it may wrap within a
+                phrase. */}
             <h1
-              style={{ "--headline-fit": `calc((100vw - 4rem) / ${HEADLINE_EMS.toFixed(2)})` } as React.CSSProperties}
+              style={{ "--headline-fit": `calc((min(100vw, 90rem) - 4rem) / ${HEADLINE_EMS.toFixed(2)})` } as React.CSSProperties}
               className={`text-balance font-black leading-[0.98] tracking-[-0.035em] text-white ${
                 HERO_PHOTO
                   ? "text-[length:max(1.75rem,min(calc(var(--headline-fit)_*_1.05),10svh))] lg:text-[length:min(5.6vw,10svh,6rem,var(--headline-fit))]"
@@ -176,11 +180,13 @@ export default function WholesalePage() {
             </h1>
 
             {/* The four answers as a row of four short facts; stacked in the
-                same order on a phone. */}
+                same order on a phone. The bold size is set so the longest
+                fact ("DeWalt, Milwaukee and more", 13.6em) stays on one line
+                in its column from about 1100px wide up. */}
             <ul className="mx-auto mt-7 grid max-w-[1440px] gap-3.5 sm:mt-10 lg:mt-[min(3.5rem,6.5svh)] lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-accent-400/60">
               {FOUR_FACTS.map(({ fact, label }) => (
-                <li key={fact} className="lg:px-4">
-                  <strong className="block text-lg font-extrabold leading-tight tracking-tight text-white lg:text-[length:clamp(1.0625rem,1.75vw,1.625rem)]">
+                <li key={fact} className="lg:px-3">
+                  <strong className="block text-lg font-extrabold leading-tight tracking-tight text-white lg:text-[length:clamp(1.0625rem,1.55vw,1.5rem)]">
                     {fact}
                   </strong>
                   <span className="mx-auto mt-0.5 block max-w-[22rem] text-[0.9375rem] leading-snug text-accent-200 lg:mt-1.5 lg:max-w-[19rem] lg:text-base lg:leading-snug">
