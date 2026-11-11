@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
-import { ArrowRight, Check, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 import Blank from "./Blank";
 
@@ -185,7 +185,7 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
               </h2>
               <p className="mt-2 text-base leading-snug text-gray-600">
                 Six fields and we call you. We reach out within the hour,
-                Monday to Friday, 9 to 6 Eastern.
+                Monday to Friday, 9 to 5 Eastern.
               </p>
 
               {/* One column on a phone. From the sm breakpoint the dialog is
@@ -281,7 +281,6 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
                 className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-500 px-6 py-3.5 text-lg font-bold text-white transition-colors hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
               >
                 {BUTTON_LABEL}
-                <ArrowRight className="h-5 w-5" aria-hidden />
               </button>
               <p className="mt-3 text-center text-sm text-gray-500">
                 Business buyers only. Resale certificate required.
@@ -317,10 +316,10 @@ function ThankYou({
       {/* RAN-52's thank-you wording. */}
       <p className="mt-2 text-base leading-relaxed text-gray-700">
         Someone from Ranzo will reach out within the hour, Monday to Friday,
-        9 to 6 Eastern.
+        9 to 5 Eastern.
       </p>
 
-      {/* The only place WhatsApp appears on the page (RAN-52). */}
+      {/* The WhatsApp channel (RAN-52). Step 3 of "How it works" names it too. */}
       <div className="mt-6 rounded-xl border border-stone-200 bg-stone-50 p-5">
         <h3 className="text-base font-bold text-accent-500">
           Join the WhatsApp deals channel
@@ -365,8 +364,8 @@ export function PricingButton({
   const open = useContext(OpenFormContext);
   const sizing =
     size === "lg"
-      ? "gap-2.5 whitespace-nowrap rounded-lg px-6 py-4 text-lg sm:px-10 sm:py-5 sm:text-xl"
-      : "gap-1.5 rounded-md px-4 py-2 text-sm";
+      ? "whitespace-nowrap rounded-lg px-6 py-4 text-lg sm:px-10 sm:py-5 sm:text-xl"
+      : "rounded-md px-4 py-2 text-sm";
   return (
     <button
       type="button"
@@ -375,7 +374,6 @@ export function PricingButton({
       className={`inline-flex items-center justify-center bg-brand-500 font-bold text-white shadow-sm transition-colors hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 ${sizing} ${className}`}
     >
       {BUTTON_LABEL}
-      <ArrowRight className={size === "lg" ? "h-6 w-6" : "h-4 w-4"} aria-hidden />
     </button>
   );
 }

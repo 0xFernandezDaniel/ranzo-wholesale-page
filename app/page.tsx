@@ -12,7 +12,7 @@ import LandingHeader from "@/components/LandingHeader";
  * click the button and fill in the six-field interest form.
  *
  * Spec: the "Wholesale page brief" in Linear, plus RAN-14, 44, 45, 46, 47,
- * 48, 51 and 52. Every claim here comes from the brief. Anything missing or
+ * 49, 51 and 52. Every claim here comes from the brief. Anything missing or
  * undecided is a <Blank>, never a guess.
  *
  * The look (Daniel's feedback, after qogita.com and acquisition.com): a light
@@ -52,19 +52,19 @@ const HERO_PHOTO = {
 };
 
 /**
- * The headline, as two phrases that each start their own line. Daniel has
- * decided this is one general landing page, so it names no single brand
- * (RAN-44).
+ * The headline: Daniel's wording, word for word (RAN-44), as three phrases
+ * that each start their own line.
  */
-const HEADLINE = { lead: "Wholesale tools and hardware,", second: "by the case or pallet." };
+const HEADLINE = ["Milwaukee, DeWalt and", "2,900 other brands", "at wholesale prices."];
 
 /**
- * How wide the longer phrase is, in ems of the headline type: 0.5em a
- * character is a safe estimate for this face and weight (this headline
- * measures 0.49). The hero's text column is made exactly this wide on a
- * laptop, so each phrase stays on one line and the photo gets the rest.
+ * How wide the hero's text column is on a laptop, in ems of the headline
+ * type. The photo takes everything to the right of it, so this number sets
+ * the photo's place and crop: it is kept at the width the photo was chosen
+ * for. Each headline phrase needs about 0.5em a character (10.5em for the
+ * longest), so all three stay on one line with room to spare.
  */
-const HEADLINE_EMS = Math.max(HEADLINE.lead.length, HEADLINE.second.length) * 0.5;
+const HEADLINE_EMS = 14.5;
 
 /** The brief's numbers ("can we deliver"), as the hero's row of stats. */
 const STATS = [
@@ -105,36 +105,31 @@ const BRANDS = [
 /**
  * The inner width of one brand tile, worked out from the width of the grid
  * (100cqw): two tiles a row with 12px of padding on a phone, two a row with
- * the cards' padding on a tablet, four a row from a laptop up, 16px gaps.
+ * 28px of padding on a tablet, four a row from a laptop up, 16px gaps.
  * Capped at 190px, where a logo reaches the full size its file was saved for.
  */
 const BRAND_TILE =
   "[--tile:min(190px,calc((100cqw-1rem)/2-1.5rem-2px))] sm:[--tile:min(190px,calc((100cqw-1rem)/2-3.5rem-2px))] lg:[--tile:min(190px,calc((100cqw-3rem)/4-3.5rem-2px))]";
 
-/** Top wholesale categories (RAN-49), as Ty listed them. */
-const CATEGORIES = [
-  "Power tools",
-  "Batteries and chargers",
-  "Hand tools",
-  "Fasteners",
-  "Safety gear",
-  "Tapes and adhesives",
-  "Tool storage",
-  "Outdoor equipment",
-];
+/** The line under the logos: Daniel's wording, word for word (RAN-14). */
+const BRANDS_LINE =
+  "We carry Milwaukee, DeWalt, Craftsman, Stanley, Irwin, Lenox and Bostitch, plus Makita, Bosch, Diablo, Klein and more than 2,900 other brands, across power tools, hand tools, blades and bits, tool storage, fasteners, outdoor power equipment and plumbing, electrical and paint supplies.";
 
-const STEPS = [
+/** The three steps, in Daniel's wording (RAN-47). `note` is a grey note for
+    Daniel under a step, not page copy. */
+const STEPS: { title: string; body: string; note?: string }[] = [
   {
     title: "Tell us about your business",
-    body: "Six fields: company, contact name, phone, email, ship-to ZIP and how you heard of us.",
+    body: "Fill out a quick form, so we can understand your needs.",
   },
   {
-    title: "We reach out within the hour with pricing",
-    body: "Monday to Friday, 9 to 6 Eastern. Pricing follows by email.",
+    title: "We reach out within the hour to assign you an Account Manager",
+    body: "Monday to Friday, 9 to 5 Eastern. Pricing follows by email.",
   },
   {
-    title: "We ship by the case from the nearest warehouse",
-    body: "15 distribution centers in 14 states.",
+    title: "We send out wholesale promos and special offers",
+    body: "On our WhatsApp deals channel.",
+    note: "Provisional wording. Daniel to confirm (RAN-47).",
   },
 ];
 
@@ -165,9 +160,6 @@ const band = "py-14 sm:py-20";
 const column = "mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8";
 const belowHeading = "mt-8 sm:mt-10";
 
-/** Plain white card with a hairline border. */
-const card = "rounded-xl border border-stone-200 bg-white p-6 sm:p-7";
-
 export default function WholesalePage() {
   return (
     <InterestFormProvider>
@@ -180,8 +172,8 @@ export default function WholesalePage() {
             click but the button.
 
             --hero-h1 is the headline size (56px on a 1366 laptop, 64px from
-            about 1560 wide). --hero-text is the text column: exactly as wide
-            as the longer headline phrase, so the photo gets all the rest. ── */}
+            about 1560 wide). --hero-text is the text column, HEADLINE_EMS of
+            that size wide; the photo gets all the rest. ── */}
         <section
           style={{ "--hero-ems": HEADLINE_EMS.toFixed(2) } as React.CSSProperties}
           className="relative overflow-hidden bg-stone-100 [--hero-h1:clamp(2.5rem,4.1vw,4rem)] [--hero-text:calc(var(--hero-h1)*var(--hero-ems))]"
@@ -189,14 +181,18 @@ export default function WholesalePage() {
           <div className={column}>
             <div className="pb-9 pt-9 sm:py-14 lg:w-[var(--hero-text)] lg:py-16">
               <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[length:var(--hero-h1)]">
-                <span className="block text-balance">{HEADLINE.lead}</span>
-                <span className="block text-balance">{HEADLINE.second}</span>
+                {HEADLINE.map((line) => (
+                  <span key={line} className="block text-balance">
+                    {line}{" "}
+                  </span>
+                ))}
               </h1>
 
               <p className="mt-4 max-w-[36rem] text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
-                For Amazon and Walmart sellers, hardware stores and bulk
-                buyers. DeWalt, Milwaukee and more. We reach out with pricing
-                within the hour, Monday to Friday, 9&nbsp;to&nbsp;6&nbsp;Eastern.
+                For contractors, hardware stores and online resellers. Every
+                product is guaranteed authentic and new in the original
+                packaging. Shipped from 15 distribution centers across the
+                United States.
               </p>
 
               {/* The stats, separated by thin vertical rules. */}
@@ -243,13 +239,18 @@ export default function WholesalePage() {
         </section>
 
         {/* ── 1. How it works (RAN-47). A sequence, not cards: each number is
-            followed by a hairline that runs on to the next. ── */}
+            followed by a hairline that runs on to the next.
+
+            The titles differ in length, so side by side each step lends its
+            three rows (number, title, text) to one shared grid: every title
+            gets the height of the longest, and the three texts start on the
+            same line. ── */}
         <section className={`bg-white ${band}`}>
           <div className={column}>
             <SectionHeading>How it works</SectionHeading>
-            <ol className={`${belowHeading} grid gap-y-9 md:grid-cols-3 md:gap-x-10`}>
+            <ol className={`${belowHeading} grid gap-y-9 md:grid-cols-3 md:gap-x-10 md:gap-y-0`}>
               {STEPS.map((step, index) => (
-                <li key={step.title}>
+                <li key={step.title} className="md:row-span-3 md:grid md:grid-rows-subgrid">
                   <div className="flex items-center gap-4">
                     <span className="text-2xl font-bold leading-none text-brand-600 sm:text-[1.75rem]">
                       {index + 1}
@@ -259,64 +260,29 @@ export default function WholesalePage() {
                   <h3 className="mt-4 max-w-[22rem] text-balance text-lg font-bold leading-snug tracking-tight text-accent-500 sm:text-xl sm:leading-snug">
                     {step.title}
                   </h3>
-                  <p className="mt-2 max-w-[22rem] text-base leading-relaxed text-gray-700">
-                    {step.body}
-                  </p>
+                  <div className="mt-2 max-w-[22rem]">
+                    <p className="text-base leading-relaxed text-gray-700">{step.body}</p>
+                    {step.note ? (
+                      <p className="mt-3">
+                        <Blank prefix="">{step.note}</Blank>
+                      </p>
+                    ) : null}
+                  </div>
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        {/* ── 2. Who buys from us (RAN-48). The brief's three segments, in
-            its order. The brief gives what and why only for the first; the
-            other two lines are provisional until Daniel confirms them. ── */}
-        <section className={`bg-stone-100 ${band}`}>
-          <div className={column}>
-            <SectionHeading>Who buys from us</SectionHeading>
-            <div className={`${belowHeading} grid gap-4 md:grid-cols-3 md:gap-6`}>
-              <article className={card}>
-                <h3 className="text-lg font-bold tracking-tight text-accent-500 sm:text-xl">
-                  Marketplace resellers
-                </h3>
-                <p className="mt-2 text-base leading-relaxed text-gray-700">
-                  Amazon and Walmart sellers of power tools. They know their
-                  numbers and buy by the case or pallet.
-                </p>
-              </article>
-              <article className={card}>
-                <h3 className="text-lg font-bold tracking-tight text-accent-500 sm:text-xl">
-                  Independent stores
-                </h3>
-                <p className="mt-2 text-base leading-relaxed text-gray-700">
-                  Hardware, farm and supply stores that restock their shelves
-                  by the case.
-                </p>
-              </article>
-              <article className={card}>
-                <h3 className="text-lg font-bold tracking-tight text-accent-500 sm:text-xl">
-                  Contractors and property managers
-                </h3>
-                <p className="mt-2 text-base leading-relaxed text-gray-700">
-                  Contractors, builders, property managers and facilities teams
-                  that buy tools and supplies in volume.
-                </p>
-              </article>
-            </div>
-            <p className="mt-6">
-              <Blank prefix="">Provisional wording. Daniel to confirm (RAN-48).</Blank>
-            </p>
-          </div>
-        </section>
-
-        {/* ── 3. Brands and categories (RAN-49). A quiet strip, not a wall:
+        {/* ── 2. Brands and categories (RAN-49). A quiet strip, not a wall:
             four brands, each a small rounded badge centred on a white tile
-            built like the cards elsewhere, then the categories as pills.
+            with a hairline border, then one sentence naming the rest of the
+            brands and the categories.
 
             One row of four from a laptop up, two by two below that. On a
-            phone the tiles keep the cards' look but with less padding, so
-            the logos have room to be larger. ── */}
-        <section className={`bg-white ${band}`}>
+            phone the tiles have less padding, so the logos have room to be
+            larger. ── */}
+        <section className={`bg-stone-100 ${band}`}>
           <div className={column}>
             <SectionHeading>Brands and categories</SectionHeading>
             <ul
@@ -341,16 +307,9 @@ export default function WholesalePage() {
                 </li>
               ))}
             </ul>
-            <ul aria-label="Categories" className="mt-6 flex flex-wrap gap-2 sm:mt-8 sm:gap-2.5">
-              {CATEGORIES.map((category) => (
-                <li
-                  key={category}
-                  className="rounded-full border border-stone-300 px-4 py-1.5 text-sm font-medium text-accent-500 sm:text-[0.9375rem]"
-                >
-                  {category}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-6 max-w-[42rem] text-base leading-relaxed text-gray-700 sm:mt-8 sm:text-lg sm:leading-relaxed">
+              {BRANDS_LINE}
+            </p>
             <p className="mt-6">
               <Blank prefix="">
                 Provisional. Daniel to confirm which logos we&rsquo;re allowed to show (RAN-49).
@@ -363,10 +322,10 @@ export default function WholesalePage() {
             block is left out until real customers give their sentences
             (RAN-50). Never add an invented quote. */}
 
-        {/* ── 4. Terms and FAQ (RAN-51). Short answers, no hedging. The
+        {/* ── 3. Terms and FAQ (RAN-51). Short answers, no hedging. The
             heading sits beside the list on a laptop and above it on a phone.
             The minimum-order question is out pending RAN-42. ── */}
-        <section className={`bg-stone-100 ${band}`}>
+        <section className={`bg-white ${band}`}>
           <div className={`${column} lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-x-10`}>
             <SectionHeading>Terms and questions</SectionHeading>
             <dl className="mt-8 border-b border-stone-300 lg:mt-0">
@@ -380,7 +339,7 @@ export default function WholesalePage() {
                 <Blank source="Daniel, RAN-51">returns on wholesale orders</Blank>
               </Faq>
               <Faq q="What happens after I send the form?">
-                We call you within the hour, Monday to Friday, 9 to 6 Eastern,
+                We call you within the hour, Monday to Friday, 9 to 5 Eastern,
                 and send pricing by email. Outside those hours, you hear from
                 us in under a business day.
               </Faq>
@@ -388,7 +347,7 @@ export default function WholesalePage() {
           </div>
         </section>
 
-        {/* ── 5. The button again, on a modest navy band: the heading on the
+        {/* ── 4. The button again, on a modest navy band: the heading on the
             left, the button on the right. The footer below is the much
             darker accent-900, so the two separate without a rule. ── */}
         <section className="bg-accent-500 py-12 sm:py-16">

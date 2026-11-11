@@ -19,7 +19,7 @@ import Logo from "./Logo";
  * the hero button has scrolled out of view.
  */
 const FACTS = [
-  { text: "Pricing within the hour, Mon\u2013Fri 9\u20136 ET", show: "" },
+  { text: "Pricing within the hour, Mon\u2013Fri 9\u20135 ET", show: "" },
   { text: "Ships by the case from 15 distribution centers", show: "hidden sm:block" },
   { text: "Family-owned on Long Island since 2021", show: "hidden lg:block" },
 ];
