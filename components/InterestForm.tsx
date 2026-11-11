@@ -2,13 +2,13 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
-import { Check, X } from "lucide-react";
+import { Check, ChevronDown, X } from "lucide-react";
 
 import Blank from "./Blank";
 
 /**
  * The wholesale interest form (RAN-52). Two steps: the button opens the
- * form, nothing is typed before that click. Six fields in the brief's order,
+ * form, nothing is typed before that click. Seven fields in Daniel's order,
  * then the thank-you screen. Design only: nothing is sent anywhere. Daniel
  * wires the submit into the B2B system when the page is ported.
  */
@@ -17,12 +17,26 @@ const OpenFormContext = createContext<() => void>(() => {});
 
 const BUTTON_LABEL = "Get wholesale pricing";
 
-// The brief's six fields, in its order. Neither the brief nor RAN-52 marks
-// any of them optional, so all six are required.
-const FIELD_NAMES = ["company", "contactName", "phone", "email", "shipToZip", "heardFrom"] as const;
+// Daniel's fields, in his order (RAN-52). All are required except the last,
+// "How did you hear of us?".
+const FIELD_NAMES = [
+  "company",
+  "contactName",
+  "phone",
+  "email",
+  "shipToZip",
+  "annualVolume",
+  "heardFrom",
+] as const;
 type FieldName = (typeof FIELD_NAMES)[number];
 
-// Provisional: Daniel still has to approve these (RAN-52).
+// Provisional: Daniel still has to confirm both lists (RAN-52).
+const ANNUAL_VOLUME_OPTIONS = [
+  "Under $10,000",
+  "$10,000 to $50,000",
+  "$50,000 to $250,000",
+  "Over $250,000",
+];
 const HEARD_FROM_OPTIONS = ["Google search", "Referral", "Amazon or Walmart", "Social media", "Other"];
 type Errors = Partial<Record<FieldName, string>>;
 
@@ -46,29 +60,35 @@ function validate(name: FieldName, raw: string): string | undefined {
     case "shipToZip":
       if (!value) return "Enter the ship-to ZIP code.";
       return /^\d{5}(-\d{4})?$/.test(value) ? undefined : "Enter a 5-digit ZIP code.";
-    case "heardFrom":
+    case "annualVolume":
       return value ? undefined : "Choose one.";
+    case "heardFrom":
+      return undefined; // Optional.
   }
 }
 
+/** One look for every control, text input or dropdown. */
 const controlClass =
-  "mt-1.5 block h-[2.875rem] w-full rounded-md border border-stone-300 bg-white px-3.5 py-2.5 text-base font-normal text-gray-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/25 aria-[invalid=true]:border-red-600 aria-[invalid=true]:focus:ring-red-600/20";
+  "block h-[2.875rem] w-full rounded-md border border-stone-300 bg-white px-3.5 py-2.5 text-base font-normal text-gray-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/25 aria-[invalid=true]:border-red-600 aria-[invalid=true]:focus:ring-red-600/20";
 
 function Field({
   name,
   label,
+  optional = false,
   error,
   children,
 }: {
   name: FieldName;
   label: string;
+  /** Required unless this is set. Required labels carry an asterisk. */
+  optional?: boolean;
   error?: string;
   /** Receives the props that tie the control to its label and message. */
   children: (control: {
     id: string;
     name: FieldName;
     className: string;
-    required: true;
+    required: boolean;
     "aria-invalid": boolean;
     "aria-describedby": string | undefined;
   }) => React.ReactNode;
@@ -79,23 +99,69 @@ function Field({
     <div>
       <label htmlFor={id} className="block text-sm font-bold text-accent-500">
         {label}
+        {/* For the eye only: `required` below says it to screen readers. */}
+        {optional ? null : (
+          <span aria-hidden className="text-brand-600">
+            {" "}
+            *
+          </span>
+        )}
       </label>
-      {children({
-        id,
-        name,
-        className: controlClass,
-        // Announced as required by screen readers. The form is noValidate, so
-        // the browser's own messages stay off and ours are the only ones.
-        required: true,
-        "aria-invalid": Boolean(error),
-        "aria-describedby": error ? errorId : undefined,
-      })}
+      <div className="relative mt-1.5">
+        {children({
+          id,
+          name,
+          className: controlClass,
+          // Announced as required by screen readers. The form is noValidate,
+          // so the browser's own messages stay off and ours are the only ones.
+          required: !optional,
+          "aria-invalid": Boolean(error),
+          "aria-describedby": error ? errorId : undefined,
+        })}
+      </div>
       {error ? (
         <p id={errorId} className="mt-1 text-sm font-medium text-red-700">
           {error}
         </p>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * A dropdown that looks like the text inputs: the browser's own look is
+ * switched off, the shared control style applies, and the arrow is ours. It
+ * is still a native <select>, so a phone opens its own picker. "Select one"
+ * shows in grey until something is chosen; a required dropdown can't be set
+ * back to it, an optional one can.
+ */
+function Dropdown({
+  options,
+  optional = false,
+  className,
+  ...control
+}: { options: string[]; optional?: boolean } & React.ComponentProps<"select">) {
+  return (
+    <>
+      <select
+        {...control}
+        defaultValue=""
+        className={`${className} cursor-pointer appearance-none text-ellipsis pr-10 has-[option:first-child:checked]:text-gray-500`}
+      >
+        <option value="" disabled={!optional}>
+          Select one
+        </option>
+        {options.map((option) => (
+          <option key={option} className="text-gray-900">
+            {option}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        aria-hidden
+        className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-500"
+      />
+    </>
   );
 }
 
@@ -161,7 +227,7 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
           // A click on the backdrop lands on the dialog element itself.
           if (event.target === dialogRef.current) close();
         }}
-        className="m-auto h-fit max-h-[calc(100dvh-1.5rem)] w-[calc(100vw-1.5rem)] max-w-[28.75rem] overflow-y-auto overscroll-contain rounded-2xl bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-accent-900/70 sm:max-h-[calc(100dvh-3rem)]"
+        className="m-auto h-fit max-h-[calc(100dvh-1.5rem)] w-[calc(100vw-1.5rem)] max-w-[35rem] overflow-y-auto overscroll-contain rounded-2xl bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-accent-900/70 sm:max-h-[calc(100dvh-3rem)]"
       >
         <div className="relative px-5 pb-6 pt-6 sm:px-8 sm:pb-7 sm:pt-7">
           <button
@@ -183,16 +249,15 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
               >
                 Get wholesale pricing
               </h2>
-              <p className="mt-2 text-base leading-snug text-gray-600">
-                Six fields and we call you. We reach out within the hour,
-                Monday to Friday, 9 to 5 Eastern.
-              </p>
 
               {/* One column on a phone. From the sm breakpoint the dialog is
-                  about 460px wide: Phone and Email keep a full row each so a
-                  long email address has room, and ZIP pairs with the dropdown. */}
-              <div className="mt-5 grid gap-3.5 sm:grid-cols-2">
-                <div className="sm:col-span-2">
+                  560px wide and two pairs share a row (Phone with Email, ZIP
+                  with volume), so the whole form fits a laptop screen without
+                  scrolling. Each pair splits two to three, which gives a long
+                  email address and the longest volume option their room.
+                  Reading order is still Daniel's field order. */}
+              <div className="mt-5 grid gap-3.5 sm:grid-cols-5">
+                <div className="sm:col-span-5">
                   <Field name="company" label="Company" error={errors.company}>
                     {(control) => (
                       <input
@@ -207,7 +272,7 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
                     )}
                   </Field>
                 </div>
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-5">
                   <Field name="contactName" label="Contact name" error={errors.contactName}>
                     {(control) => (
                       <input
@@ -228,7 +293,7 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
                     )}
                   </Field>
                 </div>
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-3">
                   <Field name="email" label="Email" error={errors.email}>
                     {(control) => (
                       <input
@@ -244,35 +309,41 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
                     )}
                   </Field>
                 </div>
-                <Field name="shipToZip" label="Ship-to ZIP" error={errors.shipToZip}>
-                  {(control) => (
-                    <input
-                      {...control}
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="shipping postal-code"
-                      maxLength={10}
-                      enterKeyHint="next"
-                    />
-                  )}
-                </Field>
-                <Field name="heardFrom" label="How did you hear of us?" error={errors.heardFrom}>
-                  {(control) => (
-                    <select {...control} defaultValue="">
-                      <option value="" disabled>
-                        Select one
-                      </option>
-                      {/* Provisional options, pending Daniel's approval (RAN-52).
-                          "Select one" is disabled and has no value, so it
-                          can't be sent: validate() asks the buyer to choose. */}
-                      {HEARD_FROM_OPTIONS.map((option) => (
-                        <option key={option}>{option}</option>
-                      ))}
-                    </select>
-                  )}
-                </Field>
-                <p className="text-sm sm:col-span-2">
-                  <Blank source="RAN-52">Daniel&rsquo;s approval of these</Blank>
+                <div className="sm:col-span-2">
+                  <Field name="shipToZip" label="Ship-to ZIP" error={errors.shipToZip}>
+                    {(control) => (
+                      <input
+                        {...control}
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="shipping postal-code"
+                        maxLength={10}
+                        enterKeyHint="next"
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div className="sm:col-span-3">
+                  <Field
+                    name="annualVolume"
+                    label="Estimated annual volume"
+                    error={errors.annualVolume}
+                  >
+                    {(control) => <Dropdown {...control} options={ANNUAL_VOLUME_OPTIONS} />}
+                  </Field>
+                </div>
+                <div className="sm:col-span-5">
+                  <Field
+                    name="heardFrom"
+                    label="How did you hear of us?"
+                    optional
+                    error={errors.heardFrom}
+                  >
+                    {(control) => <Dropdown {...control} options={HEARD_FROM_OPTIONS} optional />}
+                  </Field>
+                </div>
+                <p className="text-sm sm:col-span-5">
+                  <Blank prefix="">Provisional dropdown options. Daniel to confirm (RAN-52).</Blank>
                 </p>
               </div>
 
@@ -348,6 +419,20 @@ function ThankYou({
         Close
       </button>
     </div>
+  );
+}
+
+/** Words in running text that open the form, styled as a link (the FAQ). */
+export function OpenFormLink({ children }: { children: React.ReactNode }) {
+  const open = useContext(OpenFormContext);
+  return (
+    <button
+      type="button"
+      onClick={open}
+      className="cursor-pointer rounded-sm font-medium text-accent-500 underline decoration-stone-400 underline-offset-2 transition-colors hover:decoration-accent-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
+    >
+      {children}
+    </button>
   );
 }
 

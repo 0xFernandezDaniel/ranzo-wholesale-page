@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 
 import Blank from "@/components/Blank";
-import { InterestFormProvider, PricingButton } from "@/components/InterestForm";
+import { InterestFormProvider, OpenFormLink, PricingButton } from "@/components/InterestForm";
 import LandingFooter from "@/components/LandingFooter";
 import LandingHeader from "@/components/LandingHeader";
 
 /**
  * The wholesale landing page. One job: get a qualified wholesale buyer to
- * click the button and fill in the six-field interest form.
+ * click the button and fill in the interest form.
  *
  * Spec: the "Wholesale page brief" in Linear, plus RAN-14, 44, 45, 46, 47,
  * 49, 51 and 52. Every claim here comes from the brief. Anything missing or
@@ -38,8 +39,8 @@ const HERO_BUTTON_ID = "hero-cta";
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
  * It fills the right of the hero band on a laptop, running to the band's
- * right edge and fading into the grey on its left, and sits under the text on
- * a phone, where it shows whole. It is cropped to fill its space, and `crop`
+ * right edge, and sits under the text on a phone, where it shows whole. Its
+ * edges are clean: no fade (Daniel, RAN-46). It is cropped to fill its space, and `crop`
  * says which part stays in view at each width: the laptop space is taller
  * than wide, so it keeps the left and middle (the two full pallets) and lets
  * the right edge go; the tablet space is wide, so it keeps the floor and
@@ -66,12 +67,12 @@ const HEADLINE = ["Milwaukee, DeWalt and", "2,900 other brands", "at wholesale p
  */
 const HEADLINE_EMS = 14.5;
 
-/** The brief's numbers ("can we deliver"), as the hero's row of stats. */
+/** The brief's numbers ("can we deliver"), as the hero's row of stats. Each
+    label is short enough to stay on one line (Daniel, RAN-46). */
 const STATS = [
   { figure: "60,000+", label: "products" },
   { figure: "2,900+", label: "brands" },
-  // Non-breaking spaces (\u00A0) keep "in 14 states" together.
-  { figure: "15", label: "distribution centers in\u00A014\u00A0states" },
+  { figure: "15", label: "distribution centers" },
 ];
 
 /**
@@ -115,9 +116,8 @@ const BRAND_TILE =
 const BRANDS_LINE =
   "We carry Milwaukee, DeWalt, Craftsman, Stanley, Irwin, Lenox and Bostitch, plus Makita, Bosch, Diablo, Klein and more than 2,900 other brands, across power tools, hand tools, blades and bits, tool storage, fasteners, outdoor power equipment and plumbing, electrical and paint supplies.";
 
-/** The three steps, in Daniel's wording (RAN-47). `note` is a grey note for
-    Daniel under a step, not page copy. */
-const STEPS: { title: string; body: string; note?: string }[] = [
+/** The three steps, in Daniel's wording, which he has approved (RAN-47). */
+const STEPS = [
   {
     title: "Tell us about your business",
     body: "Fill out a quick form, so we can understand your needs.",
@@ -129,7 +129,6 @@ const STEPS: { title: string; body: string; note?: string }[] = [
   {
     title: "We send out wholesale promos and special offers",
     body: "On our WhatsApp deals channel.",
-    note: "Provisional wording. Daniel to confirm (RAN-47).",
   },
 ];
 
@@ -195,11 +194,13 @@ export default function WholesalePage() {
                 United States.
               </p>
 
-              {/* The stats, separated by thin vertical rules. */}
+              {/* The stats, separated by thin vertical rules. Every label
+                  stays on one line, so the three figures and the three labels
+                  each share a line. Only under 360px wide may a label wrap. */}
               <dl className="mt-6 flex divide-x divide-stone-300 sm:mt-8">
                 {STATS.map(({ figure, label }) => (
-                  <div key={label} className="flex flex-col-reverse justify-end px-3.5 first:pl-0 last:pr-0 sm:px-6">
-                    <dt className="mt-1 max-w-[9.5rem] text-[0.8125rem] leading-snug text-gray-600 sm:text-sm sm:leading-snug">
+                  <div key={label} className="flex flex-col-reverse justify-end px-3.5 first:pl-0 last:pr-0 max-[359px]:px-2.5 sm:px-6">
+                    <dt className="mt-1 whitespace-nowrap text-[0.8125rem] leading-snug text-gray-600 max-[359px]:whitespace-normal sm:text-sm sm:leading-snug">
                       {label}
                     </dt>
                     <dd className="text-[1.375rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[1.75rem]">
@@ -211,10 +212,7 @@ export default function WholesalePage() {
 
               <div className="mt-6 sm:mt-8">
                 <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
-                <p className="mt-4 text-sm text-gray-700 sm:text-[0.9375rem]">
-                  Six fields. We call, then email your pricing.
-                </p>
-                <p className="mt-1 text-sm font-medium text-gray-900 sm:text-[0.9375rem]">
+                <p className="mt-4 text-sm font-medium text-gray-900 sm:text-[0.9375rem]">
                   {DISQUALIFIER}
                 </p>
               </div>
@@ -223,9 +221,7 @@ export default function WholesalePage() {
 
           {/* The photo's place: to the right of the text column on a laptop,
               out to the band's right edge; under the text on a phone, edge to
-              edge. Its inner edge (left on a laptop, top on a phone) fades into
-              the grey in eased steps, so it sits on the band rather than in a
-              frame. No overlay. */}
+              edge. Clean edges, no fade and no overlay. */}
           <div className="relative aspect-square sm:aspect-[16/9] lg:absolute lg:inset-y-0 lg:right-0 lg:left-[calc(max(0px,50%-45rem)+2rem+var(--hero-text)+1.5rem)] lg:aspect-auto">
             <Image
               src={HERO_PHOTO.src}
@@ -233,7 +229,7 @@ export default function WholesalePage() {
               fill
               priority
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className={`object-cover ${HERO_PHOTO.crop} [mask-image:linear-gradient(to_bottom,transparent,rgb(0_0_0/0.4)_8%,rgb(0_0_0/0.85)_17%,black_25%)] lg:[mask-image:linear-gradient(to_right,transparent,rgb(0_0_0/0.4)_8%,rgb(0_0_0/0.85)_17%,black_26%)]`}
+              className={`object-cover ${HERO_PHOTO.crop}`}
             />
           </div>
         </section>
@@ -260,14 +256,9 @@ export default function WholesalePage() {
                   <h3 className="mt-4 max-w-[22rem] text-balance text-lg font-bold leading-snug tracking-tight text-accent-500 sm:text-xl sm:leading-snug">
                     {step.title}
                   </h3>
-                  <div className="mt-2 max-w-[22rem]">
-                    <p className="text-base leading-relaxed text-gray-700">{step.body}</p>
-                    {step.note ? (
-                      <p className="mt-3">
-                        <Blank prefix="">{step.note}</Blank>
-                      </p>
-                    ) : null}
-                  </div>
+                  <p className="mt-2 max-w-[22rem] text-base leading-relaxed text-gray-700">
+                    {step.body}
+                  </p>
                 </li>
               ))}
             </ol>
@@ -322,28 +313,38 @@ export default function WholesalePage() {
             block is left out until real customers give their sentences
             (RAN-50). Never add an invented quote. */}
 
-        {/* ── 3. Terms and FAQ (RAN-51). Short answers, no hedging. The
+        {/* ── 3. FAQs (RAN-51). Daniel's questions and answers, word for
+            word, in his order. Each answer stays hidden until its question is
+            clicked: these are native <details>, so they open with a click, a
+            tap, or Enter and Space from the keyboard, with no script. The
             heading sits beside the list on a laptop and above it on a phone.
-            The minimum-order question is out pending RAN-42. ── */}
+            No returns question: wholesale orders are not returned. ── */}
         <section className={`bg-white ${band}`}>
           <div className={`${column} lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-x-10`}>
-            <SectionHeading>Terms and questions</SectionHeading>
-            <dl className="mt-8 border-b border-stone-300 lg:mt-0">
-              <Faq q="Who can open a wholesale account?">
-                Business buyers only. A resale certificate must be on file
-                before your first order.
+            <SectionHeading>FAQs</SectionHeading>
+            <div className="mt-8 border-b border-stone-300 lg:mt-0">
+              <Faq q="Who is the right fit for the wholesale program?">
+                Our wholesale program is ideal for those who buy power tools,
+                supplies, and equipment in large quantities to bring their unit
+                cost down.
+              </Faq>
+              <Faq q="Where will my goods come from?">
+                Your goods will be sent from one of our 15 warehouses closest
+                to you. Most wholesale orders ship from Holbrook, NY, where we
+                stock most of our inventory.
+              </Faq>
+              <Faq q="I want to place an order. How does it work?">
+                <ol className="list-decimal space-y-1.5 pl-5">
+                  <li>
+                    Fill out the <OpenFormLink>wholesale interest form</OpenFormLink>.
+                  </li>
+                  <li>Receive a promo file or special offers from our sales team.</li>
+                  <li>Confirm quantities and pricing, then receive an invoice.</li>
+                </ol>
               </Faq>
               <Faq q="How do I pay?">Deposit or prepaid, by ACH or wire.</Faq>
               <Faq q="How is freight charged?">LTL freight is quoted per order.</Faq>
-              <Faq q="Can I return a wholesale order?">
-                <Blank source="Daniel, RAN-51">returns on wholesale orders</Blank>
-              </Faq>
-              <Faq q="What happens after I send the form?">
-                We call you within the hour, Monday to Friday, 9 to 5 Eastern,
-                and send pricing by email. Outside those hours, you hear from
-                us in under a business day.
-              </Faq>
-            </dl>
+            </div>
           </div>
         </section>
 
@@ -352,7 +353,7 @@ export default function WholesalePage() {
             darker accent-900, so the two separate without a rule. ── */}
         <section className="bg-accent-500 py-12 sm:py-16">
           <div className={`${column} md:flex md:items-center md:justify-between md:gap-10`}>
-            <SectionHeading tone="dark">Six fields and we call you.</SectionHeading>
+            <SectionHeading tone="dark">A quick form and we call you.</SectionHeading>
             <div className="mt-6 shrink-0 md:mt-0 md:text-right">
               {/* White focus ring: the default navy one would vanish here. */}
               <PricingButton className="w-full focus-visible:outline-white! sm:w-auto" />
@@ -367,11 +368,18 @@ export default function WholesalePage() {
   );
 }
 
+/** One question. Closed until clicked; the arrow turns when it is open. */
 function Faq({ q, children }: { q: string; children: React.ReactNode }) {
   return (
-    <div className="border-t border-stone-300 py-5">
-      <dt className="text-base font-bold text-accent-500 sm:text-lg">{q}</dt>
-      <dd className="mt-1.5 max-w-[42rem] text-base leading-relaxed text-gray-700">{children}</dd>
-    </div>
+    <details className="group border-t border-stone-300">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-sm py-5 text-accent-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 [&::-webkit-details-marker]:hidden">
+        <h3 className="text-base font-bold sm:text-lg">{q}</h3>
+        <ChevronDown
+          aria-hidden
+          className="h-5 w-5 shrink-0 text-stone-500 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
+        />
+      </summary>
+      <div className="max-w-[42rem] pb-6 text-base leading-relaxed text-gray-700">{children}</div>
+    </details>
   );
 }
