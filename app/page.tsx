@@ -68,14 +68,16 @@ const STATS = [
  * Brand logos (RAN-49). Daniel, 2026-11-15: the brands named in the line
  * below, as the colour marquee the storefront home page runs, instead
  * of a static row. The files are the storefront's own brand SVGs, plus
- * Craftsman and Bostitch from Wikimedia Commons. Diablo has no clean file
+ * Craftsman and Bostitch from Wikimedia Commons. Stanley is the tools
+ * wordmark (yellow badge), NOT the storefront's stanley.svg, which is the
+ * drinkware company's bear (Daniel, 2026-11-15). Diablo has no clean file
  * yet, so it is in the sentence and not in the strip.
  */
 const BRANDS = [
   { name: "Milwaukee", src: "/images/brands/milwaukee.svg" },
   { name: "DeWalt", src: "/images/brands/dewalt.svg" },
   { name: "Craftsman", src: "/images/brands/craftsman.svg" },
-  { name: "Stanley", src: "/images/brands/stanley.svg" },
+  { name: "Stanley", src: "/images/brands/stanley-tools.png" },
   { name: "Irwin", src: "/images/brands/irwin.svg" },
   { name: "Lenox", src: "/images/brands/lenox.svg" },
   { name: "Bostitch", src: "/images/brands/bostitch.svg" },
@@ -309,8 +311,7 @@ export default function WholesalePage() {
             <div className="mt-8 lg:mt-0">
               <Faq q="Who is the right fit for the wholesale program?">
                 Our wholesale program is ideal for those who buy power tools,
-                supplies, and equipment in large quantities to bring their unit
-                cost down.
+                supplies, and equipment in high volume to receive great pricing.
               </Faq>
               <Faq q="Where will my goods come from?">
                 Your goods will be sent from one of our 15 warehouses closest
@@ -327,7 +328,10 @@ export default function WholesalePage() {
                 </ol>
               </Faq>
               <Faq q="How do I pay?">Deposit or prepaid, by ACH or wire.</Faq>
-              <Faq q="How is freight charged?">LTL freight is quoted per order.</Faq>
+              <Faq q="How is freight charged?">
+                LTL freight is quoted per order. You may also pick up from our
+                warehouse in Holbrook, NY.
+              </Faq>
             </div>
           </div>
         </section>
