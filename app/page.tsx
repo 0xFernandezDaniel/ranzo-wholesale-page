@@ -39,8 +39,9 @@ const HERO_BUTTON_ID = "hero-cta";
  * THE HERO PHOTO (RAN-45). public/images/wholesale-hero.jpg, a square
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
- * It sits under the centred text as one wide picture (Daniel, RAN-46, after
- * acquisition.com): 4:3 on a phone, 16:9 on a tablet, 2:1 on a laptop. Its
+ * It sits in its own band under the numbers as one wide picture (Daniel,
+ * RAN-46, after acquisition.com): 4:3 on a phone, 16:9 on a tablet, 21:9 on
+ * a laptop. Its
  * edges are clean: no fade. It is cropped to fill its frame, and `crop` says
  * which part stays in view: the wider the frame, the lower the focus, so the
  * floor and the pallets stay and the ceiling goes.
@@ -57,8 +58,8 @@ const HERO_PHOTO = {
  */
 const HEADLINE = ["Milwaukee, DeWalt and", "2,900 other brands", "at wholesale prices."];
 
-/** The brief's numbers ("can we deliver"), as the hero's row of stats. Each
-    label is short enough to stay on one line (Daniel, RAN-46). */
+/** The brief's numbers ("can we deliver"), in their own band under the hero.
+    Each label is short enough to stay on one line (Daniel, RAN-46). */
 const STATS = [
   { figure: "60,000+", label: "products" },
   { figure: "2,900+", label: "brands" },
@@ -155,13 +156,14 @@ export default function WholesalePage() {
       <LandingHeader heroButtonId={HERO_BUTTON_ID} />
 
       <main className="flex-1">
-        {/* ── Hero (RAN-44, RAN-45, RAN-46). A light grey band with everything
-            centred, after acquisition.com: headline, one paragraph, the
-            stats, the button, then the photo as one wide picture under it
-            all. Nothing to click but the button. ── */}
+        {/* ── Hero (RAN-44, RAN-45, RAN-46). After acquisition.com (Daniel,
+            "clean"): a light grey band holding only the headline, one
+            paragraph and the button, all centred, with room around them.
+            The numbers and the photo have their own bands below, so the
+            hero carries nothing but the message and the click. ── */}
         <section className="bg-stone-100">
           <div className={column}>
-            <div className="mx-auto max-w-[46rem] pt-10 text-center sm:pt-14 lg:pt-16">
+            <div className="mx-auto max-w-[46rem] py-16 text-center sm:py-20 lg:py-24">
               <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,4.1vw,4rem)]">
                 {HEADLINE.map((line) => (
                   <span key={line} className="block text-balance">
@@ -170,37 +172,44 @@ export default function WholesalePage() {
                 ))}
               </h1>
 
-              <p className="mx-auto mt-4 max-w-[36rem] text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
+              <p className="mx-auto mt-5 max-w-[36rem] text-base leading-relaxed text-gray-700 sm:mt-6 sm:text-lg sm:leading-relaxed">
                 For contractors, hardware stores and online resellers. Every
                 product is guaranteed authentic and new in the original
                 packaging. Shipped from 15 distribution centers across the
                 United States.
               </p>
 
-              {/* The stats, separated by thin vertical rules. Every label
-                  stays on one line, so the three figures and the three labels
-                  each share a line. Only under 360px wide may a label wrap. */}
-              <dl className="mt-6 flex justify-center divide-x divide-stone-300 sm:mt-8">
-                {STATS.map(({ figure, label }) => (
-                  <div key={label} className="flex flex-col-reverse justify-end px-3.5 max-[359px]:px-2.5 sm:px-6">
-                    <dt className="mt-1 whitespace-nowrap text-[0.8125rem] leading-snug text-gray-600 max-[359px]:whitespace-normal sm:text-sm sm:leading-snug">
-                      {label}
-                    </dt>
-                    <dd className="text-[1.375rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[1.75rem]">
-                      {figure}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-
-              <div className="mt-6 sm:mt-8">
+              <div className="mt-8 sm:mt-10">
                 <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* The photo: one wide picture under the button, edge to edge of
-                the column, clean edges, no fade and no overlay. */}
-            <div className="relative mt-10 aspect-[4/3] overflow-hidden rounded-xl sm:mt-12 sm:aspect-[16/9] lg:mt-14 lg:aspect-[2/1]">
+        {/* ── The numbers (RAN-46), as acquisition.com shows its own: a white
+            band, each figure standing on a short orange rule, the label small
+            and spaced out under it. Three across from a tablet up, stacked on
+            a phone. ── */}
+        <section className="bg-white py-10 sm:py-14">
+          <dl className={`${column} grid gap-8 sm:grid-cols-3 sm:gap-6`}>
+            {STATS.map(({ figure, label }) => (
+              <div key={label} className="flex flex-col-reverse border-l-4 border-brand-500 pl-5 sm:pl-6">
+                <dt className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-gray-500 sm:text-xs">
+                  {label}
+                </dt>
+                <dd className="text-[2.25rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[2.75rem]">
+                  {figure}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        {/* ── The photo (RAN-45): one wide picture in its own band, clean
+            edges, no fade and no overlay. ── */}
+        <section className="bg-white pb-14 sm:pb-20">
+          <div className={column}>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-xl sm:aspect-[16/9] lg:aspect-[21/9]">
               <Image
                 src={HERO_PHOTO.src}
                 alt={HERO_PHOTO.alt}
