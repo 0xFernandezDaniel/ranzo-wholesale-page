@@ -146,9 +146,9 @@ function SectionHeading({
 
 /** Full-width band padding, and the page column every band shares, so the
     logo, the headline and each section start on the same left edge. */
-const band = "py-14 sm:py-20";
+const band = "py-12 sm:py-16";
 const column = "mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8";
-const belowHeading = "mt-8 sm:mt-10";
+const belowHeading = "mt-6 sm:mt-8";
 
 export default function WholesalePage() {
   return (
