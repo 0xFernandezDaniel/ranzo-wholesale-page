@@ -66,7 +66,7 @@ const STATS = [
 
 /**
  * Brand logos (RAN-49). Daniel, 2026-11-15: the brands named in the line
- * below, as the grayscale marquee the storefront home page runs, instead
+ * below, as the colour marquee the storefront home page runs, instead
  * of a static row. The files are the storefront's own brand SVGs, plus
  * Craftsman and Bostitch from Wikimedia Commons. Diablo has no clean file
  * yet, so it is in the sentence and not in the strip.
@@ -227,17 +227,19 @@ export default function WholesalePage() {
           </div>
         </section>
 
-        {/* ── 2. Brands and categories (RAN-49). The storefront's brand
-            marquee (Daniel, 2026-11-15): a grayscale strip of logos that
-            scrolls on its own, fades out at both edges, pauses on hover and
-            brings a logo back to colour under the pointer. Nothing in it is
-            a link. Then one sentence naming the brands and the categories. ── */}
-        <section className={`bg-stone-100 ${band}`}>
+        {/* ── 2a. Brands we carry (RAN-49). The storefront home page's brand
+            marquee as its own strip (Daniel, 2026-11-15): the logos in their
+            own colours, scrolling on their own, fading out at both edges and
+            pausing on hover. Nothing in it is a link. The small caption
+            states the only relationship that exists: we carry them. ── */}
+        <section className="border-y border-stone-200 bg-white py-10 sm:py-12">
           <div className={column}>
-            <SectionHeading>Brands and categories</SectionHeading>
+            <p className="mb-6 text-center text-xs font-bold uppercase tracking-wider text-gray-400">
+              Brands we carry
+            </p>
             <div
               aria-label="Brands"
-              className={`${belowHeading} group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]`}
+              className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
             >
               <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
                 {[0, 1].map((copy) => (
@@ -251,7 +253,7 @@ export default function WholesalePage() {
                         <img
                           src={src}
                           alt={copy === 0 ? name : ""}
-                          className="h-9 w-auto max-w-full object-contain opacity-60 grayscale sm:h-10 transition duration-300 hover:opacity-100 hover:grayscale-0"
+                          className="h-9 w-auto max-w-full object-contain sm:h-10"
                         />
                       </div>
                     ))}
@@ -259,7 +261,15 @@ export default function WholesalePage() {
                 ))}
               </div>
             </div>
-            <p className="mt-6 max-w-[42rem] text-base leading-relaxed text-gray-700 sm:mt-8 sm:text-lg sm:leading-relaxed">
+          </div>
+        </section>
+
+        {/* ── 2b. Brands and categories (RAN-49): the heading and Daniel's one
+            sentence naming the brands and the categories. ── */}
+        <section className={`bg-stone-100 ${band}`}>
+          <div className={column}>
+            <SectionHeading>Brands and categories</SectionHeading>
+            <p className={`${belowHeading} max-w-[42rem] text-base leading-relaxed text-gray-700 sm:text-lg sm:leading-relaxed`}>
               {BRANDS_LINE}
             </p>
           </div>
