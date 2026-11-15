@@ -65,18 +65,23 @@ const STATS = [
 ];
 
 /**
- * Brand logos (RAN-49). Daniel's pick, 2026-11-15: DeWalt, Milwaukee,
- * Stanley, Makita, drawn straight on the band with no tiles. DeWalt and
- * Makita are the brands' own vector files; Milwaukee and Stanley are the
- * logo on its own background colour, cropped to an even margin. Nothing is
- * redrawn or recoloured; `width` and `height` are each file's proportions,
- * and every logo is drawn at the same height, so the row reads as one line.
+ * Brand logos (RAN-49). Daniel, 2026-11-15: the brands named in the line
+ * below, as the grayscale marquee the storefront home page runs, instead
+ * of a static row. The files are the storefront's own brand SVGs, plus
+ * Craftsman and Bostitch from Wikimedia Commons. Diablo has no clean file
+ * yet, so it is in the sentence and not in the strip.
  */
 const BRANDS = [
-  { name: "DeWalt", src: "/images/brands/dewalt-logo.svg", width: 957, height: 343 },
-  { name: "Milwaukee", src: "/images/brands/milwaukee-logo.png", width: 252, height: 129 },
-  { name: "Stanley", src: "/images/brands/stanley-logo.png", width: 336, height: 96 },
-  { name: "Makita", src: "/images/brands/makita-logo.svg", width: 815, height: 287 },
+  { name: "Milwaukee", src: "/images/brands/milwaukee.svg" },
+  { name: "DeWalt", src: "/images/brands/dewalt.svg" },
+  { name: "Craftsman", src: "/images/brands/craftsman.svg" },
+  { name: "Stanley", src: "/images/brands/stanley.svg" },
+  { name: "Irwin", src: "/images/brands/irwin.svg" },
+  { name: "Lenox", src: "/images/brands/lenox.svg" },
+  { name: "Bostitch", src: "/images/brands/bostitch.svg" },
+  { name: "Makita", src: "/images/brands/makita.svg" },
+  { name: "Bosch", src: "/images/brands/bosch.svg" },
+  { name: "Klein", src: "/images/brands/klein-tools.svg" },
 ];
 
 /** The line under the logos: Daniel's wording, word for word (RAN-14). */
@@ -222,31 +227,38 @@ export default function WholesalePage() {
           </div>
         </section>
 
-        {/* ── 2. Brands and categories (RAN-49). A quiet strip, not a wall:
-            four brand logos in one row, straight on the band, no tiles
-            (Daniel, 2026-11-15), then one sentence naming the rest of the
-            brands and the categories. The row wraps to two lines on a phone. ── */}
+        {/* ── 2. Brands and categories (RAN-49). The storefront's brand
+            marquee (Daniel, 2026-11-15): a grayscale strip of logos that
+            scrolls on its own, fades out at both edges, pauses on hover and
+            brings a logo back to colour under the pointer. Nothing in it is
+            a link. Then one sentence naming the brands and the categories. ── */}
         <section className={`bg-stone-100 ${band}`}>
           <div className={column}>
             <SectionHeading>Brands and categories</SectionHeading>
-            <ul
+            <div
               aria-label="Brands"
-              className={`${belowHeading} flex flex-wrap items-center gap-x-8 gap-y-5 sm:gap-x-12 lg:gap-x-16`}
+              className={`${belowHeading} group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]`}
             >
-              {BRANDS.map(({ name, src, width, height }) => (
-                <li key={name} className="flex items-center">
-                  {/* unoptimized: the file is served exactly as saved. */}
-                  <Image
-                    src={src}
-                    alt={name}
-                    width={width}
-                    height={height}
-                    unoptimized
-                    className="h-9 w-auto rounded-sm sm:h-11 lg:h-12"
-                  />
-                </li>
-              ))}
-            </ul>
+              <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+                {[0, 1].map((copy) => (
+                  <div key={copy} className="flex shrink-0" aria-hidden={copy === 1}>
+                    {BRANDS.map(({ name, src }) => (
+                      <div
+                        key={name}
+                        className="flex h-14 w-40 shrink-0 items-center justify-center px-6 sm:w-48 lg:px-8"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={src}
+                          alt={copy === 0 ? name : ""}
+                          className="h-9 w-auto max-w-full object-contain opacity-60 grayscale sm:h-10 transition duration-300 hover:opacity-100 hover:grayscale-0"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
             <p className="mt-6 max-w-[42rem] text-base leading-relaxed text-gray-700 sm:mt-8 sm:text-lg sm:leading-relaxed">
               {BRANDS_LINE}
             </p>
