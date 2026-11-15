@@ -38,10 +38,11 @@ const HERO_BUTTON_ID = "hero-cta";
  * THE HERO PHOTO (RAN-45). public/images/wholesale-hero.jpg, a square
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
- * It sits on the right half of the hero, inside the page column, as a
- * rounded 4:3 picture beside the text (Daniel, RAN-46, after qogita.com);
- * on a phone it follows the text. Its edges are clean: no fade. `crop` is
- * the object-position that keeps the pallets and floor in view.
+ * It sits on the right half of the hero, inside the page column, as a 4:3
+ * picture with square corners beside the text (Daniel, RAN-46, after
+ * qogita.com); under a laptop width it comes BEFORE the text (Daniel,
+ * 2026-11-15). Its edges are clean: no fade, no rounding. `crop` is the
+ * object-position that keeps the pallets and floor in view.
  */
 const HERO_PHOTO = {
   src: "/images/wholesale-hero.jpg",
@@ -144,10 +145,10 @@ export default function WholesalePage() {
         {/* ── Hero (RAN-44, RAN-45, RAN-46). After qogita.com (Daniel): a light
             grey band; inside the page column, the text on the left (headline,
             one paragraph, the three numbers on thin rules, the button) and
-            the photo on the right half, a rounded picture. On a phone the
-            text comes first and the photo follows. ── */}
+            the photo on the right half. On a phone the photo comes first
+            and the text follows. ── */}
         <section className="bg-stone-100">
-          <div className={`${column} py-12 sm:py-14 lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-12 lg:py-20`}>
+          <div className={`${column} flex flex-col py-10 sm:py-14 lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-12 lg:py-20`}>
             <div className="max-w-[38rem]">
               <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,3.6vw,3.5rem)]">
                 {HEADLINE.map((line) => (
@@ -158,10 +159,9 @@ export default function WholesalePage() {
               </h1>
 
               <p className="mt-4 text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
-                For contractors, hardware stores, and resellers. Every product
-                is guaranteed authentic and brand-new in the original
-                packaging. Leverage our wholesale program to significantly
-                lower your unit cost on items from DeWalt, Milwaukee, and more.
+                Source premium tools and high margin products from a catalog
+                of 75,000+ products. All available with guaranteed
+                authenticity.
               </p>
 
               {/* The numbers: figure over label, each on a thin left rule.
@@ -186,7 +186,7 @@ export default function WholesalePage() {
               </div>
             </div>
 
-            <div className="relative mt-10 aspect-[4/3] overflow-hidden rounded-xl lg:mt-0">
+            <div className="relative order-first mb-8 aspect-[4/3] overflow-hidden sm:mb-10 lg:order-none lg:mb-0">
               <Image
                 src={HERO_PHOTO.src}
                 alt={HERO_PHOTO.alt}
