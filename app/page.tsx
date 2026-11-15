@@ -17,8 +17,9 @@ import LandingHeader from "@/components/LandingHeader";
  * undecided is a <Blank>, never a guess.
  *
  * The look (Daniel's feedback, after qogita.com and acquisition.com): a light
- * hero with the photo sitting on it, a headline at a moderate size, and dark
- * colour kept for the slim top bar, text, the closing band and the footer.
+ * hero with its text centred and the photo as one wide picture under the
+ * button (RAN-46), a headline at a moderate size, and dark colour kept for
+ * the slim top bar, text, the closing band and the footer.
  * White and very light grey bands alternate, everything lines up on one left
  * edge, and orange is the button plus the three step numbers. Storefront
  * tokens only.
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   // can never double the suffix after the port.
   title: { absolute: "Wholesale tools and hardware | Ranzo Hardware" },
   description:
-    "Wholesale tools and hardware by the case or pallet. DeWalt, Milwaukee and more. For business buyers with a resale certificate.",
+    "Wholesale tools and hardware by the case or pallet. DeWalt, Milwaukee and more, for contractors, hardware stores and online resellers.",
 };
 
 const HERO_BUTTON_ID = "hero-cta";
@@ -38,18 +39,16 @@ const HERO_BUTTON_ID = "hero-cta";
  * THE HERO PHOTO (RAN-45). public/images/wholesale-hero.jpg, a square
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
- * It fills the right of the hero band on a laptop, running to the band's
- * right edge, and sits under the text on a phone, where it shows whole. Its
- * edges are clean: no fade (Daniel, RAN-46). It is cropped to fill its space, and `crop`
- * says which part stays in view at each width: the laptop space is taller
- * than wide, so it keeps the left and middle (the two full pallets) and lets
- * the right edge go; the tablet space is wide, so it keeps the floor and
- * pallets and lets the ceiling go.
+ * It sits under the centred text as one wide picture (Daniel, RAN-46, after
+ * acquisition.com): 4:3 on a phone, 16:9 on a tablet, 2:1 on a laptop. Its
+ * edges are clean: no fade. It is cropped to fill its frame, and `crop` says
+ * which part stays in view: the wider the frame, the lower the focus, so the
+ * floor and the pallets stay and the ceiling goes.
  */
 const HERO_PHOTO = {
   src: "/images/wholesale-hero.jpg",
   alt: "Pallets stacked with boxed DeWalt tools on a warehouse floor",
-  crop: "object-center sm:object-[50%_72%] lg:object-[34%_50%]",
+  crop: "object-center sm:object-[50%_65%] lg:object-[50%_72%]",
 };
 
 /**
@@ -57,15 +56,6 @@ const HERO_PHOTO = {
  * that each start their own line.
  */
 const HEADLINE = ["Milwaukee, DeWalt and", "2,900 other brands", "at wholesale prices."];
-
-/**
- * How wide the hero's text column is on a laptop, in ems of the headline
- * type. The photo takes everything to the right of it, so this number sets
- * the photo's place and crop: it is kept at the width the photo was chosen
- * for. Each headline phrase needs about 0.5em a character (10.5em for the
- * longest), so all three stay on one line with room to spare.
- */
-const HEADLINE_EMS = 14.5;
 
 /** The brief's numbers ("can we deliver"), as the hero's row of stats. Each
     label is short enough to stay on one line (Daniel, RAN-46). */
@@ -132,9 +122,9 @@ const STEPS = [
   },
 ];
 
-/** Who the page is not for. Sits with the button, both times. No minimum
-    order is stated (removed pending Daniel's decision in RAN-42). */
-const DISQUALIFIER = "Business buyers only. Resale certificate required.";
+/* No line under the buttons: Daniel removed "Business buyers only. Resale
+   certificate required." (RAN-46). No minimum order is stated either,
+   pending RAN-42. */
 
 /** One heading style for every section: left-aligned, moderate, bold. */
 function SectionHeading({
@@ -165,21 +155,14 @@ export default function WholesalePage() {
       <LandingHeader heroButtonId={HERO_BUTTON_ID} />
 
       <main className="flex-1">
-        {/* ── Hero (RAN-44, RAN-45, RAN-46). A light grey band: the text on
-            the left, the photo on the right running to the band's edge. On a
-            phone the text comes first and the photo follows. Nothing to
-            click but the button.
-
-            --hero-h1 is the headline size (56px on a 1366 laptop, 64px from
-            about 1560 wide). --hero-text is the text column, HEADLINE_EMS of
-            that size wide; the photo gets all the rest. ── */}
-        <section
-          style={{ "--hero-ems": HEADLINE_EMS.toFixed(2) } as React.CSSProperties}
-          className="relative overflow-hidden bg-stone-100 [--hero-h1:clamp(2.5rem,4.1vw,4rem)] [--hero-text:calc(var(--hero-h1)*var(--hero-ems))]"
-        >
+        {/* ── Hero (RAN-44, RAN-45, RAN-46). A light grey band with everything
+            centred, after acquisition.com: headline, one paragraph, the
+            stats, the button, then the photo as one wide picture under it
+            all. Nothing to click but the button. ── */}
+        <section className="bg-stone-100">
           <div className={column}>
-            <div className="pb-9 pt-9 sm:py-14 lg:w-[var(--hero-text)] lg:py-16">
-              <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[length:var(--hero-h1)]">
+            <div className="mx-auto max-w-[46rem] pt-10 text-center sm:pt-14 lg:pt-16">
+              <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,4.1vw,4rem)]">
                 {HEADLINE.map((line) => (
                   <span key={line} className="block text-balance">
                     {line}{" "}
@@ -187,7 +170,7 @@ export default function WholesalePage() {
                 ))}
               </h1>
 
-              <p className="mt-4 max-w-[36rem] text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
+              <p className="mx-auto mt-4 max-w-[36rem] text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
                 For contractors, hardware stores and online resellers. Every
                 product is guaranteed authentic and new in the original
                 packaging. Shipped from 15 distribution centers across the
@@ -197,9 +180,9 @@ export default function WholesalePage() {
               {/* The stats, separated by thin vertical rules. Every label
                   stays on one line, so the three figures and the three labels
                   each share a line. Only under 360px wide may a label wrap. */}
-              <dl className="mt-6 flex divide-x divide-stone-300 sm:mt-8">
+              <dl className="mt-6 flex justify-center divide-x divide-stone-300 sm:mt-8">
                 {STATS.map(({ figure, label }) => (
-                  <div key={label} className="flex flex-col-reverse justify-end px-3.5 first:pl-0 last:pr-0 max-[359px]:px-2.5 sm:px-6">
+                  <div key={label} className="flex flex-col-reverse justify-end px-3.5 max-[359px]:px-2.5 sm:px-6">
                     <dt className="mt-1 whitespace-nowrap text-[0.8125rem] leading-snug text-gray-600 max-[359px]:whitespace-normal sm:text-sm sm:leading-snug">
                       {label}
                     </dt>
@@ -212,25 +195,21 @@ export default function WholesalePage() {
 
               <div className="mt-6 sm:mt-8">
                 <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
-                <p className="mt-4 text-sm font-medium text-gray-900 sm:text-[0.9375rem]">
-                  {DISQUALIFIER}
-                </p>
               </div>
             </div>
-          </div>
 
-          {/* The photo's place: to the right of the text column on a laptop,
-              out to the band's right edge; under the text on a phone, edge to
-              edge. Clean edges, no fade and no overlay. */}
-          <div className="relative aspect-square sm:aspect-[16/9] lg:absolute lg:inset-y-0 lg:right-0 lg:left-[calc(max(0px,50%-45rem)+2rem+var(--hero-text)+1.5rem)] lg:aspect-auto">
-            <Image
-              src={HERO_PHOTO.src}
-              alt={HERO_PHOTO.alt}
-              fill
-              priority
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className={`object-cover ${HERO_PHOTO.crop}`}
-            />
+            {/* The photo: one wide picture under the button, edge to edge of
+                the column, clean edges, no fade and no overlay. */}
+            <div className="relative mt-10 aspect-[4/3] overflow-hidden rounded-xl sm:mt-12 sm:aspect-[16/9] lg:mt-14 lg:aspect-[2/1]">
+              <Image
+                src={HERO_PHOTO.src}
+                alt={HERO_PHOTO.alt}
+                fill
+                priority
+                sizes="(min-width: 1440px) 1376px, 100vw"
+                className={`object-cover ${HERO_PHOTO.crop}`}
+              />
+            </div>
           </div>
         </section>
 
@@ -357,7 +336,6 @@ export default function WholesalePage() {
             <div className="mt-6 shrink-0 md:mt-0 md:text-right">
               {/* White focus ring: the default navy one would vanish here. */}
               <PricingButton className="w-full focus-visible:outline-white! sm:w-auto" />
-              <p className="mt-3 text-sm font-medium text-white sm:text-[0.9375rem]">{DISQUALIFIER}</p>
             </div>
           </div>
         </section>

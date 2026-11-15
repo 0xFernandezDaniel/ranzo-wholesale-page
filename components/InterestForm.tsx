@@ -353,9 +353,6 @@ export function InterestFormProvider({ children }: { children: React.ReactNode }
               >
                 {BUTTON_LABEL}
               </button>
-              <p className="mt-3 text-center text-sm text-gray-500">
-                Business buyers only. Resale certificate required.
-              </p>
             </form>
           )}
         </div>
