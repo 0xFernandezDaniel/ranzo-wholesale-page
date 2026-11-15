@@ -122,9 +122,10 @@ const STEPS = [
   },
 ];
 
-/* No line under the buttons: Daniel removed "Business buyers only. Resale
-   certificate required." (RAN-46). No minimum order is stated either,
-   pending RAN-42. */
+/** The line under both buttons (Daniel, 2026-11-15): three words that let a
+    reader sort themselves in or out. No resale-certificate clause (removed,
+    RAN-46) and no minimum order, pending RAN-42. */
+const QUALIFIER = "Business customers only";
 
 /** One heading style for every section: left-aligned, moderate, bold. */
 function SectionHeading({
@@ -195,6 +196,7 @@ export default function WholesalePage() {
 
               <div className="mt-7 sm:mt-8">
                 <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
+                <p className="mt-3 text-sm text-gray-500">{QUALIFIER}</p>
               </div>
             </div>
 
@@ -334,6 +336,7 @@ export default function WholesalePage() {
             <div className="mt-6 shrink-0 md:mt-0 md:text-right">
               {/* White focus ring: the default navy one would vanish here. */}
               <PricingButton className="w-full focus-visible:outline-white! sm:w-auto" />
+              <p className="mt-3 text-sm text-white/80">{QUALIFIER}</p>
             </div>
           </div>
         </section>
