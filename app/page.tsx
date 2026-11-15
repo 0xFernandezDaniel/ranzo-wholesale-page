@@ -106,19 +106,20 @@ const BRAND_TILE =
 const BRANDS_LINE =
   "We carry Milwaukee, DeWalt, Craftsman, Stanley, Irwin, Lenox and Bostitch, plus Makita, Bosch, Diablo, Klein and more than 2,900 other brands, across power tools, hand tools, blades and bits, tool storage, fasteners, outdoor power equipment and plumbing, electrical and paint supplies.";
 
-/** The three steps, in Daniel's wording, which he has approved (RAN-47). */
+/** The three steps, in Daniel's wording (RAN-47; steps 2 and 3 reworded by
+    Daniel in Figma, 2026-11-15). */
 const STEPS = [
   {
     title: "Tell us about your business",
     body: "Fill out a quick form, so we can understand your needs.",
   },
   {
-    title: "We reach out within the hour to assign you an Account Manager",
-    body: "Monday to Friday, 9 to 5 Eastern. Pricing follows by email.",
+    title: "An Account Manager reaches out to you within an hour",
+    body: "Monday to Friday, 9 to 5 Eastern.",
   },
   {
     title: "We send out wholesale promos and special offers",
-    body: "On our WhatsApp deals channel.",
+    body: "We send out deals via email and through our WhatsApp deals channel.",
   },
 ];
 
@@ -324,19 +325,31 @@ export default function WholesalePage() {
               <Faq q="How do I pay?">Deposit or prepaid, by ACH or wire.</Faq>
               <Faq q="How is freight charged?">LTL freight is quoted per order.</Faq>
             </div>
+            {/* Daniel's closing line (2026-11-15), under the list, in the list's
+                column; the link goes to the storefront's contact page. */}
+            <p className="mt-6 text-base leading-relaxed text-gray-700 lg:col-start-2">
+              Can&apos;t find the answer you&apos;re looking for? Make sure to{" "}
+              <a
+                href="https://ranzohardware.com/contact"
+                className="font-semibold text-accent-500 underline underline-offset-4 decoration-stone-400 hover:decoration-accent-500"
+              >
+                contact us
+              </a>
+              .
+            </p>
           </div>
         </section>
 
-        {/* ── 4. The button again, on a modest navy band: the heading on the
-            left, the button on the right. The footer below is the much
-            darker accent-900, so the two separate without a rule. ── */}
+        {/* ── 4. The button again, on a modest navy band: heading and button
+            stacked and centred (Daniel, Figma, 2026-11-15), no qualifier here.
+            The footer below is the much darker accent-900, so the two separate
+            without a rule. ── */}
         <section className="bg-accent-500 py-12 sm:py-16">
-          <div className={`${column} md:flex md:items-center md:justify-between md:gap-10`}>
-            <SectionHeading tone="dark">A quick form and we call you.</SectionHeading>
-            <div className="mt-6 shrink-0 md:mt-0 md:text-right">
+          <div className={`${column} text-center`}>
+            <SectionHeading tone="dark">Sign up for our wholesale program.</SectionHeading>
+            <div className="mt-6 sm:mt-7">
               {/* White focus ring: the default navy one would vanish here. */}
               <PricingButton className="w-full focus-visible:outline-white! sm:w-auto" />
-              <p className="mt-3 text-sm text-white/80">{QUALIFIER}</p>
             </div>
           </div>
         </section>
