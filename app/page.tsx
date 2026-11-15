@@ -162,15 +162,16 @@ export default function WholesalePage() {
                 lower your unit cost on items from DeWalt, Milwaukee, and more.
               </p>
 
-              {/* The numbers: figure over label, each on a thin left rule,
-                  in a row. Only under 360px wide may a label wrap. */}
-              <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-4 sm:mt-7 sm:gap-x-10">
+              {/* The numbers: figure over label, each on a thin left rule.
+                  Three equal columns on a phone, where labels may wrap; a
+                  row from a tablet up, where they stay on one line. */}
+              <dl className="mt-6 grid grid-cols-3 gap-x-3 sm:mt-7 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-4">
                 {STATS.map(({ figure, label }) => (
-                  <div key={label} className="flex flex-col-reverse border-l-2 border-accent-500 pl-3">
-                    <dt className="mt-0.5 whitespace-nowrap text-[0.8125rem] leading-snug text-gray-600 max-[359px]:whitespace-normal sm:text-sm">
+                  <div key={label} className="flex flex-col-reverse border-l-2 border-accent-500 pl-2.5 sm:pl-3">
+                    <dt className="mt-0.5 text-[0.75rem] leading-snug text-gray-600 sm:whitespace-nowrap sm:text-sm">
                       {label}
                     </dt>
-                    <dd className="text-[1.375rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[1.625rem]">
+                    <dd className="text-[1.25rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[1.625rem]">
                       {figure}
                     </dd>
                   </div>
