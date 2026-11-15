@@ -280,12 +280,32 @@ export default function WholesalePage() {
             word, in his order. Each answer stays hidden until its question is
             clicked: these are native <details>, so they open with a click, a
             tap, or Enter and Space from the keyboard, with no script. The
-            heading sits beside the list on a laptop and above it on a phone.
+            heading and the contact line sit beside the list on a laptop and
+            above it on a phone (after qogita.com, Daniel 2026-11-15); a rule
+            runs under each question, none above the first.
             No returns question: wholesale orders are not returned. ── */}
         <section className={`bg-white ${band}`}>
           <div className={`${column} lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-x-10`}>
-            <SectionHeading>FAQs</SectionHeading>
-            <div className="mt-8 border-b border-stone-300 lg:mt-0">
+            {/* Left column, after qogita.com (Daniel, 2026-11-15): the heading,
+                then his line and a short list of links. */}
+            <div className="max-w-[22rem]">
+              <SectionHeading>FAQs</SectionHeading>
+              <p className="mt-5 text-base leading-relaxed text-gray-700">
+                Can&apos;t find the answer you&apos;re looking for? Make sure to
+                contact us:
+              </p>
+              <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-gray-700">
+                <li>
+                  <a
+                    href="https://ranzohardware.com/contact"
+                    className="font-medium text-accent-500 underline underline-offset-4 decoration-stone-400 hover:decoration-accent-500"
+                  >
+                    Contact us
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-8 lg:mt-0">
               <Faq q="Who is the right fit for the wholesale program?">
                 Our wholesale program is ideal for those who buy power tools,
                 supplies, and equipment in large quantities to bring their unit
@@ -308,18 +328,6 @@ export default function WholesalePage() {
               <Faq q="How do I pay?">Deposit or prepaid, by ACH or wire.</Faq>
               <Faq q="How is freight charged?">LTL freight is quoted per order.</Faq>
             </div>
-            {/* Daniel's closing line (2026-11-15), under the list, in the list's
-                column; the link goes to the storefront's contact page. */}
-            <p className="mt-6 text-base leading-relaxed text-gray-700 lg:col-start-2">
-              Can&apos;t find the answer you&apos;re looking for? Make sure to{" "}
-              <a
-                href="https://ranzohardware.com/contact"
-                className="font-semibold text-accent-500 underline underline-offset-4 decoration-stone-400 hover:decoration-accent-500"
-              >
-                contact us
-              </a>
-              .
-            </p>
           </div>
         </section>
 
@@ -346,7 +354,7 @@ export default function WholesalePage() {
 /** One question. Closed until clicked; the arrow turns when it is open. */
 function Faq({ q, children }: { q: string; children: React.ReactNode }) {
   return (
-    <details className="group border-t border-stone-300">
+    <details className="group border-b border-stone-300">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-sm py-5 text-accent-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 [&::-webkit-details-marker]:hidden">
         <h3 className="text-base font-bold sm:text-lg">{q}</h3>
         <ChevronDown
