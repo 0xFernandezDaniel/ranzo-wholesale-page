@@ -39,18 +39,16 @@ const HERO_BUTTON_ID = "hero-cta";
  * THE HERO PHOTO (RAN-45). public/images/wholesale-hero.jpg, a square
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
- * On a laptop it stands on both sides of the hero text (Daniel, RAN-46,
- * after acquisition.com), the same file twice: the left panel shows the
- * left part of the picture and the right panel the right part, so the two
- * read as one warehouse behind the words. Under a laptop width it sits
- * under the text as one 16:9 picture. Its edges are clean: no fade. Each
- * `crop` is the object-position that keeps the pallets and floor in view.
+ * On a laptop it stands to the right of the hero text (Daniel, RAN-46:
+ * first both sides after acquisition.com, then the right side only). Under
+ * a laptop width it sits under the text as one 16:9 picture. Its edges are
+ * clean: no fade. Each `crop` is the object-position that keeps the pallets
+ * and floor in view.
  */
 const HERO_PHOTO = {
   src: "/images/wholesale-hero.jpg",
   alt: "Pallets stacked with boxed DeWalt tools on a warehouse floor",
-  cropLeft: "object-[18%_62%]",
-  cropRight: "object-[82%_62%]",
+  cropRight: "object-[72%_62%]",
   cropBelow: "object-[50%_65%]",
 };
 
@@ -160,23 +158,16 @@ export default function WholesalePage() {
       <main className="flex-1">
         {/* ── Hero (RAN-44, RAN-45, RAN-46). After acquisition.com (Daniel):
             a short light grey band, the headline, one paragraph and the
-            button centred, and the photo standing on both sides of them,
-            running out to the screen's edges. On a laptop the band is a
-            three-column grid whose side cells are the photo, as tall as the
-            text makes the band. Below a laptop the sides go and the photo
-            sits under the text instead. ── */}
+            button centred, and the photo standing to the right of them,
+            running out to the screen's edge. On a laptop the band is a
+            three-column grid: an empty left cell, the text, the photo, as
+            tall as the text makes the band. Below a laptop the photo sits
+            under the text instead. ── */}
         <section className="bg-stone-100">
           <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,46rem)_minmax(0,1fr)] lg:gap-x-8">
-            <div className="relative hidden lg:block">
-              <Image
-                src={HERO_PHOTO.src}
-                alt=""
-                fill
-                priority
-                sizes="(min-width: 1024px) 25vw, 0px"
-                className={`object-cover ${HERO_PHOTO.cropLeft}`}
-              />
-            </div>
+            {/* The left cell stays empty so the text keeps the page's centre
+                (Daniel, 2026-11-15: picture on the right side only). */}
+            <div className="hidden lg:block" aria-hidden="true" />
 
             <div className="px-4 py-12 text-center sm:px-6 sm:py-14 lg:py-16">
               <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,4.1vw,4rem)]">
