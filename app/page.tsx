@@ -54,7 +54,7 @@ const HERO_PHOTO = {
  * The headline: Daniel's wording, word for word (RAN-44, shortened
  * 2026-11-15), as two phrases that each start their own line.
  */
-const HEADLINE = ["Power tools", "at wholesale prices."];
+const HEADLINE = ["Power tools in bulk", "at wholesale prices"];
 
 /** The brief's numbers ("can we deliver"), as a row under the hero paragraph,
     each on a thin left rule (after qogita.com). Each label is short enough to
@@ -172,10 +172,10 @@ export default function WholesalePage() {
               </h1>
 
               <p className="mt-4 text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
-                For contractors, hardware stores and online resellers. Every
-                product is guaranteed authentic and new in the original
-                packaging. Shipped from 15 distribution centers across the
-                United States.
+                For contractors, hardware stores, and resellers. Every product
+                is guaranteed authentic and brand-new in the original
+                packaging. Leverage our wholesale program to significantly
+                lower your unit cost on items from DeWalt, Milwaukee, and more.
               </p>
 
               {/* The numbers: figure over label, each on a thin left rule,
