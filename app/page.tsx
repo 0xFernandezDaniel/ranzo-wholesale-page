@@ -230,13 +230,10 @@ export default function WholesalePage() {
         {/* ── 2a. Brands we carry (RAN-49). The storefront home page's brand
             marquee as its own strip (Daniel, 2026-11-15): the logos in their
             own colours, scrolling on their own, fading out at both edges and
-            pausing on hover. Nothing in it is a link. The small caption
-            states the only relationship that exists: we carry them. ── */}
+            pausing on hover. Nothing in it is a link, and no caption
+            (Daniel, 2026-11-15). ── */}
         <section className="border-y border-stone-200 bg-white py-10 sm:py-12">
           <div className={column}>
-            <p className="mb-6 text-center text-xs font-bold uppercase tracking-wider text-gray-400">
-              Brands we carry
-            </p>
             <div
               aria-label="Brands"
               className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
