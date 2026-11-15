@@ -448,8 +448,10 @@ export function PricingButton({
     size === "lg"
       ? "whitespace-nowrap rounded-lg px-7 py-4 text-lg sm:px-9 sm:py-4 sm:text-lg"
       : "rounded-md px-4 py-2 text-sm";
-  /* Hover (Daniel, 2026-11-15): a darker panel slides in from the left
-     under the label, 300ms. With reduced motion the colour simply changes. */
+  /* Hover (Daniel, 2026-11-15): a darker panel with a slanted leading edge
+     slides in from the left under the label, 300ms; it is wider than the
+     button so the slant clears both corners. With reduced motion the colour
+     simply changes. */
   return (
     <button
       type="button"
@@ -459,7 +461,7 @@ export function PricingButton({
     >
       <span
         aria-hidden
-        className="absolute inset-0 -z-10 -translate-x-full bg-brand-600 transition-transform duration-300 ease-out group-hover:translate-x-0 motion-reduce:hidden"
+        className="absolute inset-y-0 -left-[20%] -z-10 w-[140%] -translate-x-full -skew-x-12 bg-brand-600 transition-transform duration-300 ease-out group-hover:translate-x-0 motion-reduce:hidden"
       />
       {BUTTON_LABEL}
     </button>
