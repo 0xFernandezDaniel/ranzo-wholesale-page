@@ -52,9 +52,9 @@ const HERO_PHOTO = {
 
 /**
  * The headline: Daniel's wording, word for word (RAN-44, shortened
- * 2026-11-15), as three phrases that each start their own line.
+ * 2026-11-15), as two phrases that each start their own line.
  */
-const HEADLINE = ["Power tools in bulk,", "at wholesale prices,", "shipped across the USA."];
+const HEADLINE = ["Power tools", "at wholesale prices."];
 
 /** The brief's numbers ("can we deliver"), as a row under the hero paragraph,
     each on a thin left rule (after qogita.com). Each label is short enough to
@@ -163,7 +163,7 @@ export default function WholesalePage() {
         <section className="bg-stone-100">
           <div className={`${column} py-12 sm:py-14 lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-12 lg:py-20`}>
             <div className="max-w-[38rem]">
-              <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.25rem,3.3vw,3.25rem)]">
+              <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,3.6vw,3.5rem)]">
                 {HEADLINE.map((line) => (
                   <span key={line} className="block text-balance">
                     {line}{" "}
