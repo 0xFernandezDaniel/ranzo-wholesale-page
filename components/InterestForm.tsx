@@ -446,7 +446,7 @@ export function PricingButton({
   const open = useContext(OpenFormContext);
   const sizing =
     size === "lg"
-      ? "whitespace-nowrap rounded-full px-8 py-4 text-lg sm:px-12 sm:py-5 sm:text-xl"
+      ? "whitespace-nowrap rounded-lg px-7 py-4 text-lg sm:px-9 sm:py-4 sm:text-lg"
       : "rounded-md px-4 py-2 text-sm";
   return (
     <button

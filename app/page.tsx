@@ -39,17 +39,15 @@ const HERO_BUTTON_ID = "hero-cta";
  * THE HERO PHOTO (RAN-45). public/images/wholesale-hero.jpg, a square
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
- * On a laptop it stands to the right of the hero text (Daniel, RAN-46:
- * first both sides after acquisition.com, then the right side only). Under
- * a laptop width it sits under the text as one 16:9 picture. Its edges are
- * clean: no fade. Each `crop` is the object-position that keeps the pallets
- * and floor in view.
+ * It sits on the right half of the hero, inside the page column, as a
+ * rounded 4:3 picture beside the text (Daniel, RAN-46, after qogita.com);
+ * on a phone it follows the text. Its edges are clean: no fade. `crop` is
+ * the object-position that keeps the pallets and floor in view.
  */
 const HERO_PHOTO = {
   src: "/images/wholesale-hero.jpg",
   alt: "Pallets stacked with boxed DeWalt tools on a warehouse floor",
-  cropRight: "object-[72%_62%]",
-  cropBelow: "object-[50%_65%]",
+  crop: "object-[50%_62%]",
 };
 
 /**
@@ -58,8 +56,9 @@ const HERO_PHOTO = {
  */
 const HEADLINE = ["Power tools", "at wholesale prices."];
 
-/** The brief's numbers ("can we deliver"), in their own band under the hero.
-    Each label is short enough to stay on one line (Daniel, RAN-46). */
+/** The brief's numbers ("can we deliver"), as a row under the hero paragraph,
+    each on a thin left rule (after qogita.com). Each label is short enough to
+    stay on one line (Daniel, RAN-46). */
 const STATS = [
   { figure: "60,000+", label: "products" },
   { figure: "2,900+", label: "brands" },
@@ -156,21 +155,15 @@ export default function WholesalePage() {
       <LandingHeader heroButtonId={HERO_BUTTON_ID} />
 
       <main className="flex-1">
-        {/* ── Hero (RAN-44, RAN-45, RAN-46). After acquisition.com (Daniel):
-            a short light grey band, the headline, one paragraph and the
-            button centred, and the photo standing to the right of them,
-            running out to the screen's edge. On a laptop the band is a
-            three-column grid: an empty left cell, the text, the photo, as
-            tall as the text makes the band. Below a laptop the photo sits
-            under the text instead. ── */}
+        {/* ── Hero (RAN-44, RAN-45, RAN-46). After qogita.com (Daniel): a light
+            grey band; inside the page column, the text on the left (headline,
+            one paragraph, the three numbers on thin rules, the button) and
+            the photo on the right half, a rounded picture. On a phone the
+            text comes first and the photo follows. ── */}
         <section className="bg-stone-100">
-          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,46rem)_minmax(0,1fr)] lg:gap-x-8">
-            {/* The left cell stays empty so the text keeps the page's centre
-                (Daniel, 2026-11-15: picture on the right side only). */}
-            <div className="hidden lg:block" aria-hidden="true" />
-
-            <div className="px-4 py-12 text-center sm:px-6 sm:py-14 lg:py-16">
-              <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,4.1vw,4rem)]">
+          <div className={`${column} py-12 sm:py-14 lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-12 lg:py-20`}>
+            <div className="max-w-[38rem]">
+              <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,3.6vw,3.5rem)]">
                 {HEADLINE.map((line) => (
                   <span key={line} className="block text-balance">
                     {line}{" "}
@@ -178,59 +171,44 @@ export default function WholesalePage() {
                 ))}
               </h1>
 
-              <p className="mx-auto mt-5 max-w-[36rem] text-base leading-relaxed text-gray-700 sm:mt-6 sm:text-lg sm:leading-relaxed">
+              <p className="mt-4 text-base leading-relaxed text-gray-700 sm:mt-5 sm:text-lg sm:leading-relaxed">
                 For contractors, hardware stores and online resellers. Every
                 product is guaranteed authentic and new in the original
                 packaging. Shipped from 15 distribution centers across the
                 United States.
               </p>
 
+              {/* The numbers: figure over label, each on a thin left rule,
+                  in a row. Only under 360px wide may a label wrap. */}
+              <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-4 sm:mt-7 sm:gap-x-10">
+                {STATS.map(({ figure, label }) => (
+                  <div key={label} className="flex flex-col-reverse border-l-2 border-accent-500 pl-3">
+                    <dt className="mt-0.5 whitespace-nowrap text-[0.8125rem] leading-snug text-gray-600 max-[359px]:whitespace-normal sm:text-sm">
+                      {label}
+                    </dt>
+                    <dd className="text-[1.375rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[1.625rem]">
+                      {figure}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
               <div className="mt-7 sm:mt-8">
                 <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
               </div>
             </div>
 
-            <div className="relative hidden lg:block">
+            <div className="relative mt-10 aspect-[4/3] overflow-hidden rounded-xl lg:mt-0">
               <Image
                 src={HERO_PHOTO.src}
                 alt={HERO_PHOTO.alt}
                 fill
                 priority
-                sizes="(min-width: 1024px) 25vw, 0px"
-                className={`object-cover ${HERO_PHOTO.cropRight}`}
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className={`object-cover ${HERO_PHOTO.crop}`}
               />
             </div>
           </div>
-
-          {/* Under a laptop width: the photo beneath the text, edge to edge. */}
-          <div className="relative aspect-[16/9] lg:hidden">
-            <Image
-              src={HERO_PHOTO.src}
-              alt={HERO_PHOTO.alt}
-              fill
-              sizes="(min-width: 1024px) 0px, 100vw"
-              className={`object-cover ${HERO_PHOTO.cropBelow}`}
-            />
-          </div>
-        </section>
-
-        {/* ── The numbers (RAN-46), as acquisition.com shows its own: a white
-            band, each figure standing on a short orange rule, the label small
-            and spaced out under it. Three across from a tablet up, stacked on
-            a phone. ── */}
-        <section className="bg-white py-10 sm:py-14">
-          <dl className={`${column} grid gap-8 sm:grid-cols-3 sm:gap-6`}>
-            {STATS.map(({ figure, label }) => (
-              <div key={label} className="flex flex-col-reverse border-l-4 border-brand-500 pl-5 sm:pl-6">
-                <dt className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-gray-500 sm:text-xs">
-                  {label}
-                </dt>
-                <dd className="text-[2.25rem] font-bold leading-none tracking-tight text-accent-500 sm:text-[2.75rem]">
-                  {figure}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </section>
 
         {/* ── 1. How it works (RAN-47). A sequence, not cards: each number is
