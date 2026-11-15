@@ -448,13 +448,19 @@ export function PricingButton({
     size === "lg"
       ? "whitespace-nowrap rounded-lg px-7 py-4 text-lg sm:px-9 sm:py-4 sm:text-lg"
       : "rounded-md px-4 py-2 text-sm";
+  /* Hover (Daniel, 2026-11-15): a darker panel slides in from the left
+     under the label, 300ms. With reduced motion the colour simply changes. */
   return (
     <button
       type="button"
       id={id}
       onClick={open}
-      className={`inline-flex items-center justify-center bg-brand-500 font-bold text-white shadow-sm transition-colors hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 ${sizing} ${className}`}
+      className={`group relative isolate inline-flex items-center justify-center overflow-hidden bg-brand-500 font-bold text-white shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 motion-reduce:hover:bg-brand-600 ${sizing} ${className}`}
     >
+      <span
+        aria-hidden
+        className="absolute inset-0 -z-10 -translate-x-full bg-brand-600 transition-transform duration-300 ease-out group-hover:translate-x-0 motion-reduce:hidden"
+      />
       {BUTTON_LABEL}
     </button>
   );
