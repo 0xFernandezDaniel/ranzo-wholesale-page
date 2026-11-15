@@ -169,7 +169,7 @@ export default function WholesalePage() {
                   row from a tablet up, where they stay on one line. */}
               <dl className="mt-6 grid grid-cols-3 gap-x-3 sm:mt-7 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-4">
                 {STATS.map(({ figure, label }) => (
-                  <div key={label} className="flex flex-col-reverse border-l-2 border-accent-500 pl-2.5 sm:pl-3">
+                  <div key={label} className="flex flex-col-reverse justify-end border-l-2 border-accent-500 pl-2.5 sm:pl-3">
                     <dt className="mt-0.5 text-[0.75rem] leading-snug text-gray-600 sm:whitespace-nowrap sm:text-sm">
                       {label}
                     </dt>
