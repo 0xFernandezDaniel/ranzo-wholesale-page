@@ -55,10 +55,10 @@ const HERO_PHOTO = {
 };
 
 /**
- * The headline: Daniel's wording, word for word (RAN-44), as three phrases
- * that each start their own line.
+ * The headline: Daniel's wording, word for word (RAN-44, shortened
+ * 2026-11-15), as two phrases that each start their own line.
  */
-const HEADLINE = ["Milwaukee, DeWalt and", "2,900 other brands", "at wholesale prices."];
+const HEADLINE = ["Power tools", "at wholesale prices."];
 
 /** The brief's numbers ("can we deliver"), in their own band under the hero.
     Each label is short enough to stay on one line (Daniel, RAN-46). */
