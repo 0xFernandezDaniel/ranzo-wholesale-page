@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 
-import Blank from "@/components/Blank";
 import { InterestFormProvider, OpenFormLink, PricingButton } from "@/components/InterestForm";
 import LandingFooter from "@/components/LandingFooter";
 import LandingHeader from "@/components/LandingHeader";
@@ -66,41 +65,19 @@ const STATS = [
 ];
 
 /**
- * Brand logos (RAN-49). Provisional: Daniel still has to confirm which logos
- * we are allowed to show. Order is the one Ty set. Makita is left out until
- * there is a correct file for it.
- *
- * DeWalt is the brand's own vector file, unchanged. The other three are the
- * logo on its own background colour, cropped to an even margin and saved at
- * twice the widest size it is drawn at. Nothing is redrawn, recoloured or
- * stretched: `width` and `height` are the file's own proportions.
- *
- * `show` is how wide the logo is drawn, as a share of a tile's inner width.
- * The shares balance the row by visual weight, not by height: every badge
- * covers about the same area, so a wide logo (Stanley) comes out shorter and
- * a compact one (Grip-Rite) taller, and none dominates. To add a brand, put
- * its file here and pick `show` so that show x show / (width / height)
- * comes to about 0.22. Grip-Rite sits a little under that, because its
- * badge is the tallest and has no margin of its own. DeWalt's is higher,
- * because its file has clear space around the yellow badge (the badge is
- * 93% of the file's width and 79% of its height); it also keeps its own
- * square corners, since the rounding only ever trims a file's margin.
+ * Brand logos (RAN-49). Daniel's pick, 2026-11-15: DeWalt, Milwaukee,
+ * Stanley, Makita, drawn straight on the band with no tiles. DeWalt and
+ * Makita are the brands' own vector files; Milwaukee and Stanley are the
+ * logo on its own background colour, cropped to an even margin. Nothing is
+ * redrawn or recoloured; `width` and `height` are each file's proportions,
+ * and every logo is drawn at the same height, so the row reads as one line.
  */
 const BRANDS = [
-  { name: "DeWalt", src: "/images/brands/dewalt-logo.svg", width: 957, height: 343, show: 0.92 },
-  { name: "Milwaukee", src: "/images/brands/milwaukee-logo.png", width: 252, height: 129, show: 0.66 },
-  { name: "Stanley", src: "/images/brands/stanley-logo.png", width: 336, height: 96, show: 0.88 },
-  { name: "Grip-Rite", src: "/images/brands/grip-rite-logo.png", width: 198, height: 139, show: 0.52 },
+  { name: "DeWalt", src: "/images/brands/dewalt-logo.svg", width: 957, height: 343 },
+  { name: "Milwaukee", src: "/images/brands/milwaukee-logo.png", width: 252, height: 129 },
+  { name: "Stanley", src: "/images/brands/stanley-logo.png", width: 336, height: 96 },
+  { name: "Makita", src: "/images/brands/makita-logo.svg", width: 815, height: 287 },
 ];
-
-/**
- * The inner width of one brand tile, worked out from the width of the grid
- * (100cqw): two tiles a row with 12px of padding on a phone, two a row with
- * 28px of padding on a tablet, four a row from a laptop up, 16px gaps.
- * Capped at 190px, where a logo reaches the full size its file was saved for.
- */
-const BRAND_TILE =
-  "[--tile:min(190px,calc((100cqw-1rem)/2-1.5rem-2px))] sm:[--tile:min(190px,calc((100cqw-1rem)/2-3.5rem-2px))] lg:[--tile:min(190px,calc((100cqw-3rem)/4-3.5rem-2px))]";
 
 /** The line under the logos: Daniel's wording, word for word (RAN-14). */
 const BRANDS_LINE =
@@ -246,25 +223,18 @@ export default function WholesalePage() {
         </section>
 
         {/* ── 2. Brands and categories (RAN-49). A quiet strip, not a wall:
-            four brands, each a small rounded badge centred on a white tile
-            with a hairline border, then one sentence naming the rest of the
-            brands and the categories.
-
-            One row of four from a laptop up, two by two below that. On a
-            phone the tiles have less padding, so the logos have room to be
-            larger. ── */}
+            four brand logos in one row, straight on the band, no tiles
+            (Daniel, 2026-11-15), then one sentence naming the rest of the
+            brands and the categories. The row wraps to two lines on a phone. ── */}
         <section className={`bg-stone-100 ${band}`}>
           <div className={column}>
             <SectionHeading>Brands and categories</SectionHeading>
             <ul
               aria-label="Brands"
-              className={`${belowHeading} @container grid grid-cols-2 gap-4 lg:grid-cols-4 ${BRAND_TILE}`}
+              className={`${belowHeading} flex flex-wrap items-center gap-x-8 gap-y-5 sm:gap-x-12 lg:gap-x-16`}
             >
-              {BRANDS.map(({ name, src, width, height, show }) => (
-                <li
-                  key={name}
-                  className="flex h-28 items-center justify-center rounded-xl border border-stone-200 bg-white p-3 sm:h-36 sm:p-7"
-                >
+              {BRANDS.map(({ name, src, width, height }) => (
+                <li key={name} className="flex items-center">
                   {/* unoptimized: the file is served exactly as saved. */}
                   <Image
                     src={src}
@@ -272,19 +242,13 @@ export default function WholesalePage() {
                     width={width}
                     height={height}
                     unoptimized
-                    style={{ width: `calc(var(--tile) * ${show})` }}
-                    className="h-auto max-w-none rounded-md"
+                    className="h-9 w-auto rounded-sm sm:h-11 lg:h-12"
                   />
                 </li>
               ))}
             </ul>
             <p className="mt-6 max-w-[42rem] text-base leading-relaxed text-gray-700 sm:mt-8 sm:text-lg sm:leading-relaxed">
               {BRANDS_LINE}
-            </p>
-            <p className="mt-6">
-              <Blank prefix="">
-                Provisional. Daniel to confirm which logos we&rsquo;re allowed to show (RAN-49).
-              </Blank>
             </p>
           </div>
         </section>
