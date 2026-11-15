@@ -39,17 +39,19 @@ const HERO_BUTTON_ID = "hero-cta";
  * THE HERO PHOTO (RAN-45). public/images/wholesale-hero.jpg, a square
  * 1600x1600 JPEG under 500 KB. To swap it, replace the file or change `src`.
  *
- * It sits in its own band under the numbers as one wide picture (Daniel,
- * RAN-46, after acquisition.com): 4:3 on a phone, 16:9 on a tablet, 21:9 on
- * a laptop. Its
- * edges are clean: no fade. It is cropped to fill its frame, and `crop` says
- * which part stays in view: the wider the frame, the lower the focus, so the
- * floor and the pallets stay and the ceiling goes.
+ * On a laptop it stands on both sides of the hero text (Daniel, RAN-46,
+ * after acquisition.com), the same file twice: the left panel shows the
+ * left part of the picture and the right panel the right part, so the two
+ * read as one warehouse behind the words. Under a laptop width it sits
+ * under the text as one 16:9 picture. Its edges are clean: no fade. Each
+ * `crop` is the object-position that keeps the pallets and floor in view.
  */
 const HERO_PHOTO = {
   src: "/images/wholesale-hero.jpg",
   alt: "Pallets stacked with boxed DeWalt tools on a warehouse floor",
-  crop: "object-center sm:object-[50%_65%] lg:object-[50%_72%]",
+  cropLeft: "object-[18%_62%]",
+  cropRight: "object-[82%_62%]",
+  cropBelow: "object-[50%_65%]",
 };
 
 /**
@@ -156,14 +158,27 @@ export default function WholesalePage() {
       <LandingHeader heroButtonId={HERO_BUTTON_ID} />
 
       <main className="flex-1">
-        {/* ── Hero (RAN-44, RAN-45, RAN-46). After acquisition.com (Daniel,
-            "clean"): a light grey band holding only the headline, one
-            paragraph and the button, all centred, with room around them.
-            The numbers and the photo have their own bands below, so the
-            hero carries nothing but the message and the click. ── */}
+        {/* ── Hero (RAN-44, RAN-45, RAN-46). After acquisition.com (Daniel):
+            a short light grey band, the headline, one paragraph and the
+            button centred, and the photo standing on both sides of them,
+            running out to the screen's edges. On a laptop the band is a
+            three-column grid whose side cells are the photo, as tall as the
+            text makes the band. Below a laptop the sides go and the photo
+            sits under the text instead. ── */}
         <section className="bg-stone-100">
-          <div className={column}>
-            <div className="mx-auto max-w-[46rem] py-16 text-center sm:py-20 lg:py-24">
+          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,46rem)_minmax(0,1fr)] lg:gap-x-8">
+            <div className="relative hidden lg:block">
+              <Image
+                src={HERO_PHOTO.src}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 1024px) 25vw, 0px"
+                className={`object-cover ${HERO_PHOTO.cropLeft}`}
+              />
+            </div>
+
+            <div className="px-4 py-12 text-center sm:px-6 sm:py-14 lg:py-16">
               <h1 className="text-[1.875rem] max-[359px]:text-[1.75rem] font-bold leading-[1.08] tracking-tight text-accent-500 sm:text-[2.5rem] lg:text-[clamp(2.5rem,4.1vw,4rem)]">
                 {HEADLINE.map((line) => (
                   <span key={line} className="block text-balance">
@@ -179,10 +194,32 @@ export default function WholesalePage() {
                 United States.
               </p>
 
-              <div className="mt-8 sm:mt-10">
+              <div className="mt-7 sm:mt-8">
                 <PricingButton id={HERO_BUTTON_ID} className="w-full sm:w-auto" />
               </div>
             </div>
+
+            <div className="relative hidden lg:block">
+              <Image
+                src={HERO_PHOTO.src}
+                alt={HERO_PHOTO.alt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 25vw, 0px"
+                className={`object-cover ${HERO_PHOTO.cropRight}`}
+              />
+            </div>
+          </div>
+
+          {/* Under a laptop width: the photo beneath the text, edge to edge. */}
+          <div className="relative aspect-[16/9] lg:hidden">
+            <Image
+              src={HERO_PHOTO.src}
+              alt={HERO_PHOTO.alt}
+              fill
+              sizes="(min-width: 1024px) 0px, 100vw"
+              className={`object-cover ${HERO_PHOTO.cropBelow}`}
+            />
           </div>
         </section>
 
@@ -203,23 +240,6 @@ export default function WholesalePage() {
               </div>
             ))}
           </dl>
-        </section>
-
-        {/* ── The photo (RAN-45): one wide picture in its own band, clean
-            edges, no fade and no overlay. ── */}
-        <section className="bg-white pb-14 sm:pb-20">
-          <div className={column}>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-xl sm:aspect-[16/9] lg:aspect-[21/9]">
-              <Image
-                src={HERO_PHOTO.src}
-                alt={HERO_PHOTO.alt}
-                fill
-                priority
-                sizes="(min-width: 1440px) 1376px, 100vw"
-                className={`object-cover ${HERO_PHOTO.crop}`}
-              />
-            </div>
-          </div>
         </section>
 
         {/* ── 1. How it works (RAN-47). A sequence, not cards: each number is
