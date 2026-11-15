@@ -60,7 +60,7 @@ const HEADLINE = ["Power tools in bulk", "at wholesale prices"];
     each on a thin left rule (after qogita.com). Each label is short enough to
     stay on one line (Daniel, RAN-46). */
 const STATS = [
-  { figure: "60,000+", label: "products" },
+  { figure: "75,000+", label: "products" },
   { figure: "2,900+", label: "brands" },
   { figure: "15", label: "distribution centers" },
 ];
